@@ -1,7 +1,7 @@
 import { applyBrowserFixes } from "./browser-fixes.js";
 import { reactive } from "./reactive.js";
-import { validate } from "./validate.js";
-import { di } from "./di.js";
+import { validate } from "./validation.js";
+import { di } from "./container.js";
 
 applyBrowserFixes();
 
