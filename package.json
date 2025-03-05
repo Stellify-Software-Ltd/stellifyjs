@@ -1,7 +1,7 @@
 {
   "name": "stellifyjs",
   "version": "1.5.0",
-  "main": "src/index.js",
+  "main": "src/framework.js",
   "type": "module",
   "scripts": {
     "test": "node --experimental-vm-modules ./node_modules/.bin/jest"
