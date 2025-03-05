@@ -1,15 +1,19 @@
 {
   "name": "stellifyjs",
   "version": "1.5.2",
+  "type": "module",
   "main": "src/framework.js",
   "module": "src/framework.js",
   "exports": {
     ".": {
       "import": "./src/framework.js",
-      "require": "./src/framework.js"
+      "require": "./src/framework.js",
+      "default": "./src/framework.js"
     }
   },
-  "type": "module",
+  "files": [
+    "src"
+  ],
   "scripts": {
     "test": "node --experimental-vm-modules ./node_modules/.bin/jest"
   },
