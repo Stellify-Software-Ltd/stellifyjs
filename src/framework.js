@@ -9,6 +9,6 @@ applyBrowserFixes();
 export {
     http,
     reactive,
-    validate,
+    useValidation,
     di
 };
