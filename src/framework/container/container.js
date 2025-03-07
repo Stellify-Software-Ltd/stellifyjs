@@ -1,14 +1,14 @@
-const container = new Map();
+const diContainer = new Map();
 
-export const di = {
+export const container = {
     bind: (name, factory) => {
-      container.set(name, factory);
+      diContainer.set(name, factory);
     },
     make: (name) => {
-      if (!container.has(name)) {
+      if (!diContainer.has(name)) {
         throw new Error(`Service ${name} not found in container.`);
       }
-      return container.get(name)();
+      return diContainer.get(name)();
     },
-    has: (name) => container.has(name)
+    has: (name) => diContainer.has(name)
 };

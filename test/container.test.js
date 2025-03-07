@@ -1,4 +1,4 @@
-import { di } from "../src/container";
+import { container } from "../src/framework/container/container";
 
 test("Container should bind and resolve dependencies", () => {
     class AuthService {
@@ -8,7 +8,7 @@ test("Container should bind and resolve dependencies", () => {
     }
 
     di.bind("AuthService", () => new AuthService());
-    const authService = di.make("AuthService");
+    const authService = container.make("AuthService");
 
     expect(authService.login()).toBe("User logged in");
 });
