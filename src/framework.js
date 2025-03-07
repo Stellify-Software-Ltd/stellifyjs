@@ -10,5 +10,5 @@ export {
     http,
     reactive,
     useValidation,
-    di
+    container
 };
