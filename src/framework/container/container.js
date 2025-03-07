@@ -11,4 +11,4 @@ export const di = {
       return container.get(name)();
     },
     has: (name) => container.has(name)
-  };
+};
