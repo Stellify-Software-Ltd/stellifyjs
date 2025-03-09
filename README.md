@@ -8,7 +8,7 @@ As with Laravel, StellifyJS uses dependency injection to inject classes via the 
 
 ## Use with Stellify
 
-StellifyJS can be used to extend ([Stellify](https://github.com/Stellify-Software-Ltd/stellify)) by adding functionality that doesn't exist in the core framework. It is automatically exposed via the Window object in the Stellify editor (visit [stellisoft.com](https://stellisoft.com)) and therefore, it can be accessed and put to use with your own imported JS files directly; Or alternatively, you can pull down the package and bundle it up with various library extensions of your choosing, then request it from a server/ CDN.
+StellifyJS can be used to extend [Stellify](https://github.com/Stellify-Software-Ltd/stellify) by adding functionality that doesn't exist in the core framework. It is automatically exposed via the Window object in the Stellify editor (visit [stellisoft.com](https://stellisoft.com)) and therefore, it can be accessed and put to use with your own imported JS files directly; Or alternatively, you can pull down the package and bundle it up with various library extensions of your choosing, then request it from a server/ CDN.
 
 ## Installation
 ```sh
