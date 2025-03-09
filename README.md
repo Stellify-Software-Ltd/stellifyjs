@@ -4,7 +4,10 @@ StellifyJS is a Laravel-inspired **front-end only framework** complete with depe
 
 ## Purpose
 
-As with Laravel, StellifyJS uses dependency injection to inject classes via the constructor (or in some casses the setter method) so as to better integrate and maintain compatibility of class dependencies. This will hopefully lead to the creation of an ecosystem where we (JS developers) are striving towards common goals rather than developing disparate packages that need to be shoehorned into projects with no guarantees of ongoing compatibility as code is changed (or deprectaed).
+I need/ want a Laravel like framework for my front-end development work that focuses on dependency injection/ contracts to help work with SOLID principles, especially Dependency Inversion (D in SOLID).
+
+I also want to provide helper methods that result in the same type of elegant & expressive syntax you get in Laravel as well as built-in code that simplifies common tasks such as front-end authentication and form validation. I'm even contemplating CLI stuff similar to Laravel Artisan to automatically scaffold classes such as models that could mirror the models that exist on you Laravel web app and also provide an elegant or should I say Eloquent, ORM for manipulating data.
+
 
 ## Use with Stellify
 
