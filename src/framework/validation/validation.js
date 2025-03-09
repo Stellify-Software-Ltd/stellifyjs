@@ -1,5 +1,5 @@
 export class Validator {
-    constructor(rules, { container = null, locale = "en", apiBaseUrl = "" } = {}) {
+    constructor({ rules, container = null, locale = "en", apiBaseUrl = "" } = {}) {
       this.rules = rules;
       this.errors = {};
       this.container = container; // Dependency Injection support
