@@ -1,6 +1,6 @@
 {
   "name": "stellifyjs",
-  "version": "1.10.0",
+  "version": "1.10.1",
   "type": "module",
   "main": "src/framework.js",
   "module": "src/framework.js",
