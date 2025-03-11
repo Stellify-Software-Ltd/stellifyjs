@@ -6,13 +6,26 @@ export class Validator {
       this.debounceTimers = {}; // Store debounced function calls
       this.apiBaseUrl = apiBaseUrl;
     }
+
+    /**
+     * Check if any rule is async (i.e. requires an API call)
+     * @param {Object} data - Form data to validate.
+     * @returns {Boolean} - Returns true if validation passes, false otherwise.
+     */
+    async validate(data) {
+      const hasAsyncRules = Object.keys(this.rules).some((field) =>
+        this.rules[field].split("|").some((rule) => this.isAsyncRule(rule))
+      );
+    
+      return hasAsyncRules ? await this.validateAsync(data) : this.validateSync(data);
+    }
   
     /**
      * Validate the given data synchronously.
      * @param {Object} data - Form data to validate.
      * @returns {Boolean} - Returns true if validation passes, false otherwise.
      */
-    validate(data) {
+    validateSync(data) {
       this.errors = {}; // Reset errors
   
       for (const field in this.rules) {
