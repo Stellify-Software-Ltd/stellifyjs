@@ -23,5 +23,21 @@ npm install stellifyjs
 import { Container, Http, Validator } from "stellifyjs";
 ```
 
+### 
+
+The service container is a powerful tool for managing class dependencies and performing dependency injection. You bind classes to the container as shown below:
+
+```js
+const container = new Container();
+container.bind("str", Str);
+```
+
+Now, from anywhere in the framework, you can access string helpers dynamically:
+
+```js
+const strHelper = di.resolve("str");
+console.log(strHelper.slug("Hello World!")); // "hello-world"
+```
+
 ## License
 MIT
