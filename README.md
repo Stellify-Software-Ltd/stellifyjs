@@ -40,4 +40,4 @@ console.log(strHelper.slug("Hello World!")); // "hello-world"
 ```
 
 ## License
-MIT
+StellifyJS is open-sourced software licensed under the MIT license.
