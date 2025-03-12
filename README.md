@@ -18,7 +18,7 @@ StellifyJS can be used to extend [Stellify](https://github.com/Stellify-Software
 npm install stellifyjs
 ```
 
-## Usage
+## Getting Started
 ```js
 import { Container, Http, Validator } from "stellifyjs";
 ```
