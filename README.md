@@ -4,7 +4,7 @@ StellifyJS is a Laravel-inspired **front-end only framework** complete with a se
 
 ## Using StellifyJS to build front-end functionality with Stellify
 
-StellifyJS was created to afford the users of [Stellify](https://github.com/Stellify-Software-Ltd/stellify) the convenience they experience working with Laravel on the server, client-side. The various classes and helper functions are automatically exposed via the Window object in the Stellify editor that is found at [stellisoft.com](https://stellisoft.com) This means they can be accessed directly without installation. Alternatively, you can pull down the package and bundle it up with various library extensions of your choosing before requesting it from a server/ CDN.
+StellifyJS was created to provide the users of [Stellify](https://github.com/Stellify-Software-Ltd/stellify) the convenience they experience working with Laravel on the server, client-side. The various classes and helper functions provided are automatically exposed via the Window object in the Stellify editor (found at [stellisoft.com](https://stellisoft.com)). This means they can be accessed directly without installation. Alternatively, you can pull down the package and bundle it up with various library extensions of your choosing before requesting it from a server/ CDN.
 
 ## Installation
 ```sh
