@@ -1,17 +1,10 @@
 # StellifyJS
 
-StellifyJS is a Laravel-inspired **front-end only framework** complete with dependency injection and various helper utilities such as form validation, a HTTP request wrapper and browser compatibility patches. 
+StellifyJS is a Laravel-inspired **front-end only framework** complete with a service container and various other helper utilities such as collections, form validation, a HTTP request wrapper and so on.
 
-## Purpose
+## Using StellifyJS to build front-end functionality with Stellify
 
-I need/ want a Laravel like framework for my front-end development work that focuses on dependency injection/ contracts to help work with SOLID principles, especially Dependency Inversion (D in SOLID).
-
-I also want to provide helper methods that result in the same type of elegant & expressive syntax you get in Laravel as well as built-in code that simplifies common tasks such as front-end authentication and form validation. I'm even contemplating CLI stuff similar to Laravel Artisan to automatically scaffold classes such as models that could mirror the models that exist on you Laravel web app and also provide an elegant (or should I say Eloquent?), ORM for manipulating data.
-
-
-## Use with Stellify
-
-StellifyJS can be used to extend [Stellify](https://github.com/Stellify-Software-Ltd/stellify) by adding functionality that doesn't exist in the core framework. It is automatically exposed via the Window object in the Stellify editor (visit [stellisoft.com](https://stellisoft.com)) and therefore, it can be accessed and put to use with your own imported JS files directly; Or alternatively, you can pull down the package and bundle it up with various library extensions of your choosing, then request it from a server/ CDN.
+StellifyJS was created to afford the users of [Stellify](https://github.com/Stellify-Software-Ltd/stellify) the convenience they experience working with Laravel on the server, client-side. The various classes and helper functions are automatically exposed via the Window object in the Stellify editor that is found at [stellisoft.com](https://stellisoft.com) This means they can be accessed directly without installation. Alternatively, you can pull down the package and bundle it up with various library extensions of your choosing before requesting it from a server/ CDN.
 
 ## Installation
 ```sh
@@ -35,11 +28,11 @@ container.bind("str", Str);
 Now, from anywhere in the framework, you can access string helpers dynamically:
 
 ```js
-const strHelper = di.resolve("str");
+const strHelper = container.resolve("str");
 console.log(strHelper.slug("Hello World!")); // "hello-world"
 ```
 
-### String Helper Methods
+## String Helper Methods
 Converts a word to its plural form.
 
 ```javascript
