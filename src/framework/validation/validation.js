@@ -99,6 +99,16 @@ export class Validator {
     getRuleFunction(ruleName) {
       return this[ruleName] || (this.container ? this.container.resolve(ruleName) : null);
     }
+
+    /**
+     * Check to see if a validation rule is asynchronous.
+     * @param {String} rule - The validation rule name.
+     * @returns {Boolean} - True if is async.
+     */
+    isAsyncRule(rule) {
+      const asyncRules = ["uniqueEmail", "existsInDB"];
+      return asyncRules.includes(rule.split(":")[0]); // Extract rule name before ":"
+    }
   
     /**
      * Debounce function execution to prevent excessive API calls.
