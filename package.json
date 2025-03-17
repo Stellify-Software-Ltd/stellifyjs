@@ -6,9 +6,9 @@
   "module": "src/framework.js",
   "exports": {
     ".": {
-      "import": "./src/framework.js",
-      "require": "./src/framework.js",
-      "default": "./src/framework.js"
+      "import": "./src/application.js",
+      "require": "./src/application.js",
+      "default": "./src/application.js"
     }
   },
   "files": [
@@ -22,6 +22,7 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
+    "@types/node": "^22.13.10",
     "jest": "^29.7.0"
   }
 }

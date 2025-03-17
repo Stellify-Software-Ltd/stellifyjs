@@ -1,5 +1,8 @@
-export class Validator {
+import ValidationContract from "../../contracts/Validation.js";
+
+class Validation extends ValidationContract {
     constructor({ rules, container = null, locale = "en", apiBaseUrl = "" } = {}) {
+      super(); 
       this.rules = rules;
       this.errors = {};
       this.container = container; // Dependency Injection support
@@ -188,4 +191,6 @@ export class Validator {
       }
     }
   }
+
+  export default Validation;
   
