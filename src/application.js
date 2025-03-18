@@ -14,51 +14,15 @@ class Application {
      * Dynamically load and register service providers from the config.
      */
     async registerServiceProviders() {
-        if (!this.config.providers || !Array.isArray(this.config.providers)) {
-            return;
-        }
-    
-        for (const providerPath of this.config.providers) {
-            try {
-                let Provider;
-    
-                if (typeof providerPath === 'function') {
-                    Provider = providerPath;
-                } else if (typeof providerPath === 'string') {
-                    try {
-                        if (providerPath.startsWith('stellifyjs/')) {
-                            // Handle package providers
-                            const relativePath = providerPath.replace('stellifyjs/', '');
-                            // Try multiple resolution strategies
-                            try {
-                                const module = await import(`./src/${relativePath}`);
-                                Provider = module.default;
-                            } catch (e) {
-                                const module = await import(/* @vite-ignore */ providerPath);
-                                Provider = module.default;
-                            }
-                        } else {
-                            // For local providers, use direct import
-                            const module = await import(providerPath);
-                            Provider = module.default;
-                        }
-                    } catch (moduleError) {
-                        console.error('Initial import failed:', moduleError);
-                        // Final fallback to absolute URL
-                        const absolutePath = new URL(providerPath, window.location.origin).href;
-                        const module = await import(/* @vite-ignore */ absolutePath);
-                        Provider = module.default;
-                    }
+        if (this.config.providers && Array.isArray(this.config.providers)) {
+            // Dynamically load and register each provider listed in the config
+            for (const providerPath of this.config.providers) {
+                try {
+                    const { default: Provider } = await import(providerPath);
+                    this.registerProvider(Provider);
+                } catch (error) {
+                    console.error(`Failed to load provider at ${providerPath}:`, error);
                 }
-    
-                if (!Provider) {
-                    throw new Error(`Invalid provider: ${providerPath}`);
-                }
-    
-                this.registerProvider(Provider);
-            } catch (error) {
-                console.error(`Failed to load provider at ${providerPath}:`, error);
-                throw error;
             }
         }
     }
