@@ -23,18 +23,22 @@ class Application {
                 let Provider;
     
                 if (typeof providerPath === 'function') {
-                    // Handle direct class/function provider
                     Provider = providerPath;
                 } else if (typeof providerPath === 'string') {
-                    // Try different import strategies
                     try {
-                        // First try direct import (for node_modules)
-                        console.log('providerPath', providerPath)
-                        const module = await import(providerPath);
-                        console.log('module', module)
-                        Provider = module.default;
+                        // For npm packages, try to resolve from node_modules
+                        if (providerPath.startsWith('stellifyjs/')) {
+                            const npmPath = providerPath.replace('stellifyjs/', '');
+                            const module = await import(`../dist/${npmPath}`);
+                            Provider = module.default;
+                        } else {
+                            // For local providers
+                            const module = await import(providerPath);
+                            Provider = module.default;
+                        }
                     } catch (moduleError) {
-                        // If direct import fails, try with base URL
+                        console.error('Module import error:', moduleError);
+                        // Last resort: try absolute URL
                         const absolutePath = new URL(providerPath, window.location.origin).href;
                         const module = await import(/* @vite-ignore */ absolutePath);
                         Provider = module.default;
@@ -48,7 +52,7 @@ class Application {
                 this.registerProvider(Provider);
             } catch (error) {
                 console.error(`Failed to load provider at ${providerPath}:`, error);
-                throw new Error(`Unable to load service provider: ${providerPath}\n${error.message}`);
+                throw error; // Throw original error for better debugging
             }
         }
     }
