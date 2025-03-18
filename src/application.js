@@ -26,10 +26,10 @@ class Application {
                     Provider = providerPath;
                 } else if (typeof providerPath === 'string') {
                     try {
-                        // For npm packages, try to resolve from node_modules
                         if (providerPath.startsWith('stellifyjs/')) {
-                            const npmPath = providerPath.replace('stellifyjs/', '');
-                            const module = await import(`../dist/${npmPath}`);
+                            // For npm packages, import directly from src instead of dist
+                            const npmPath = providerPath.replace('stellifyjs/', './');
+                            const module = await import(npmPath);
                             Provider = module.default;
                         } else {
                             // For local providers
@@ -38,7 +38,7 @@ class Application {
                         }
                     } catch (moduleError) {
                         console.error('Module import error:', moduleError);
-                        // Last resort: try absolute URL
+                        // Try absolute URL as last resort
                         const absolutePath = new URL(providerPath, window.location.origin).href;
                         const module = await import(/* @vite-ignore */ absolutePath);
                         Provider = module.default;
@@ -52,7 +52,7 @@ class Application {
                 this.registerProvider(Provider);
             } catch (error) {
                 console.error(`Failed to load provider at ${providerPath}:`, error);
-                throw error; // Throw original error for better debugging
+                throw error;
             }
         }
     }
