@@ -2,8 +2,8 @@
   "name": "stellifyjs",
   "version": "1.12.0",
   "type": "module",
-  "main": "src/framework.js",
-  "module": "src/framework.js",
+  "main": "src/application.js",
+  "module": "src/application.js",
   "exports": {
     ".": {
       "import": "./src/application.js",
