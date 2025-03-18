@@ -27,18 +27,24 @@ class Application {
                 } else if (typeof providerPath === 'string') {
                     try {
                         if (providerPath.startsWith('stellifyjs/')) {
-                            // For npm packages, import directly from src instead of dist
-                            const npmPath = providerPath.replace('stellifyjs/', './');
-                            const module = await import(npmPath);
-                            Provider = module.default;
+                            // Handle package providers
+                            const relativePath = providerPath.replace('stellifyjs/', '');
+                            // Try multiple resolution strategies
+                            try {
+                                const module = await import(`./src/${relativePath}`);
+                                Provider = module.default;
+                            } catch (e) {
+                                const module = await import(/* @vite-ignore */ providerPath);
+                                Provider = module.default;
+                            }
                         } else {
-                            // For local providers
+                            // For local providers, use direct import
                             const module = await import(providerPath);
                             Provider = module.default;
                         }
                     } catch (moduleError) {
-                        console.error('Module import error:', moduleError);
-                        // Try absolute URL as last resort
+                        console.error('Initial import failed:', moduleError);
+                        // Final fallback to absolute URL
                         const absolutePath = new URL(providerPath, window.location.origin).href;
                         const module = await import(/* @vite-ignore */ absolutePath);
                         Provider = module.default;
