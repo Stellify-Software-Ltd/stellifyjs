@@ -18,10 +18,13 @@ class Application {
             // Dynamically load and register each provider listed in the config
             for (const providerPath of this.config.providers) {
                 try {
-                    const { default: Provider } = await import(providerPath);
+                    // Convert relative path to absolute URL for browser environments
+                    const absolutePath = new URL(providerPath, window.location.origin).href;
+                    const { default: Provider } = await import(/* @vite-ignore */ absolutePath);
                     this.registerProvider(Provider);
                 } catch (error) {
                     console.error(`Failed to load provider at ${providerPath}:`, error);
+                    throw new Error(`Unable to load service provider: ${providerPath}\n${error.message}`);
                 }
             }
         }
