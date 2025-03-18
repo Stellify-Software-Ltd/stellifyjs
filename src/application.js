@@ -14,18 +14,41 @@ class Application {
      * Dynamically load and register service providers from the config.
      */
     async registerServiceProviders() {
-        if (this.config.providers && Array.isArray(this.config.providers)) {
-            // Dynamically load and register each provider listed in the config
-            for (const providerPath of this.config.providers) {
-                try {
-                    // Convert relative path to absolute URL for browser environments
-                    const absolutePath = new URL(providerPath, window.location.origin).href;
-                    const { default: Provider } = await import(/* @vite-ignore */ absolutePath);
-                    this.registerProvider(Provider);
-                } catch (error) {
-                    console.error(`Failed to load provider at ${providerPath}:`, error);
-                    throw new Error(`Unable to load service provider: ${providerPath}\n${error.message}`);
+        if (!this.config.providers || !Array.isArray(this.config.providers)) {
+            return;
+        }
+    
+        for (const providerPath of this.config.providers) {
+            try {
+                let Provider;
+    
+                if (typeof providerPath === 'function') {
+                    // Handle direct class/function provider
+                    Provider = providerPath;
+                } else if (typeof providerPath === 'string') {
+                    // Try different import strategies
+                    try {
+                        // First try direct import (for node_modules)
+                        console.log('providerPath', providerPath)
+                        const module = await import(providerPath);
+                        console.log('module', module)
+                        Provider = module.default;
+                    } catch (moduleError) {
+                        // If direct import fails, try with base URL
+                        const absolutePath = new URL(providerPath, window.location.origin).href;
+                        const module = await import(/* @vite-ignore */ absolutePath);
+                        Provider = module.default;
+                    }
                 }
+    
+                if (!Provider) {
+                    throw new Error(`Invalid provider: ${providerPath}`);
+                }
+    
+                this.registerProvider(Provider);
+            } catch (error) {
+                console.error(`Failed to load provider at ${providerPath}:`, error);
+                throw new Error(`Unable to load service provider: ${providerPath}\n${error.message}`);
             }
         }
     }
