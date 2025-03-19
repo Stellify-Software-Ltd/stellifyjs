@@ -13,20 +13,16 @@ class Application {
    */
   async registerServiceProviders() {
     if (this.config.providers && Array.isArray(this.config.providers)) {
-        for (const providerName of this.config.providers) {
-            try {
-                // Ensure the provider name is correct (no ".js" extension here)
-                const { default: Provider } = await import(`/node_modules/stellifyjs/dist/${providerName}.js`);
-
-                // Register the provider
-                this.registerProvider(Provider);
-            } catch (error) {
-                console.error(`Failed to load provider at ${providerName}:`, error);
-            }
+      for (const providerName of this.config.providers) {
+        try {
+          const { default: Provider } = await import(`/node_modules/stellifyjs/dist/${providerName}.js`);
+          this.registerProvider(Provider);
+        } catch (error) {
+          console.error(`Failed to load provider at ${providerName}:`, error);
         }
+      }
     }
   }
-
   /**
    * Bind a service to the container.
    * 

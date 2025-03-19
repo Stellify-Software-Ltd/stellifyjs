@@ -5,7 +5,8 @@ import esbuild from 'rollup-plugin-esbuild';
 export default {
   input: {
     Application: 'src/Application.js',
-    AppServiceProvider: 'src/providers/AppServiceProvider.js'
+    AppServiceProvider: 'src/providers/AppServiceProvider.js',
+    ValidationServiceProvider: 'src/providers/AppServiceProvider.js'
   },
   output: {
     dir: 'dist',
