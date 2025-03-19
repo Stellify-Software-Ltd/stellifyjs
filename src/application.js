@@ -19,14 +19,19 @@ class Application {
         if (this.config.providers && Array.isArray(this.config.providers)) {
             for (const providerName of this.config.providers) {
                 try {
-                    // ✅ Construct the correct absolute path
-                    const modulePath = new URL(`./node_modules/stellifyjs/dist/${providerName}.js`, import.meta.url).href;
-                    
-                    console.log(`Loading provider from: ${modulePath}`); // 🔍 Debugging
+                    // Log the providerName and config to verify correctness
+                    console.log(`Config:`, this.config); // Log full config for debugging
+                    console.log(`Loading provider: ${providerName}`);
     
-                    // ✅ Use dynamic import with the resolved path
+                    // Ensure the provider name is correct (no ".js" extension here)
+                    const modulePath = new URL(`./node_modules/stellifyjs/dist/${providerName}.js`, import.meta.url).href;
+    
+                    console.log(`Loading provider from: ${modulePath}`); // Log resolved path
+    
+                    // Dynamically import the provider
                     const { default: Provider } = await import(/* @vite-ignore */ modulePath);
     
+                    // Register the provider
                     this.registerProvider(Provider);
                 } catch (error) {
                     console.error(`Failed to load provider at ${providerName}:`, error);
