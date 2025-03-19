@@ -22,15 +22,8 @@ class Application {
                     // Log the providerName and config to verify correctness
                     console.log(`Config:`, this.config); // Log full config for debugging
                     console.log(`Loading provider: ${providerName}`);
-                    console.log('import.meta.url', import.meta.url, `./node_modules/stellifyjs/dist/${providerName}.js`);
-    
                     // Ensure the provider name is correct (no ".js" extension here)
-                    const modulePath = new URL(`./node_modules/stellifyjs/dist/${providerName}.js`, import.meta.url).href;
-    
-                    console.log(`Loading provider from: ${modulePath}`); // Log resolved path
-    
-                    // Dynamically import the provider
-                    const { default: Provider } = await import(/* @vite-ignore */ modulePath);
+                    const { default: Provider } = await import(`stellifyjs/dist/${providerName}.js`);
     
                     // Register the provider
                     this.registerProvider(Provider);
