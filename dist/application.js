@@ -13,16 +13,21 @@ class Application {
    */
   async registerServiceProviders() {
     if (this.config.providers && Array.isArray(this.config.providers)) {
-      for (const providerPath of this.config.providers) {
-        try {
-          const { default: Provider } = await import(providerPath);
-          this.registerProvider(Provider);
-        } catch (error) {
-          console.error(`Failed to load provider at ${providerPath}:`, error);
+        for (const providerName of this.config.providers) {
+            try {
+                // ✅ Construct the correct path for dynamic imports
+                const modulePath = new URL(`./node_modules/stellifyjs/dist/${providerName}.js`, import.meta.url).href;
+                // ✅ Use dynamic import with absolute path
+                const { default: Provider } = await import(/* @vite-ignore */ modulePath);
+
+                this.registerProvider(Provider);
+            } catch (error) {
+                console.error(`Failed to load provider at ${providerName}:`, error);
+            }
         }
-      }
     }
-  }
+}   
+
   /**
    * Bind a service to the container.
    * 
