@@ -15,9 +15,12 @@ class Application {
     if (this.config.providers && Array.isArray(this.config.providers)) {
         for (const providerName of this.config.providers) {
             try {
-                // ✅ Construct the correct path for dynamic imports
+                // ✅ Construct the correct absolute path
                 const modulePath = new URL(`./node_modules/stellifyjs/dist/${providerName}.js`, import.meta.url).href;
-                // ✅ Use dynamic import with absolute path
+                
+                console.log(`Loading provider from: ${modulePath}`); // 🔍 Debugging
+
+                // ✅ Use dynamic import with the resolved path
                 const { default: Provider } = await import(/* @vite-ignore */ modulePath);
 
                 this.registerProvider(Provider);
@@ -26,7 +29,7 @@ class Application {
             }
         }
     }
-}   
+  } 
 
   /**
    * Bind a service to the container.
