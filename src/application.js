@@ -23,7 +23,7 @@ class Application {
                     console.log(`Config:`, this.config); // Log full config for debugging
                     console.log(`Loading provider: ${providerName}`);
                     // Ensure the provider name is correct (no ".js" extension here)
-                    const { default: Provider } = await import(`stellifyjs/dist/${providerName}.js`);
+                    const { default: Provider } = await import(`/node_modules/stellifyjs/dist/${providerName}.js`);
     
                     // Register the provider
                     this.registerProvider(Provider);
