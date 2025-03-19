@@ -1,12 +1,14 @@
-import ServiceProvider from './contracts/ServiceProvider.js';
+import ServiceProvider from '../contracts/ServiceProvider.js';
+import Validation from '../core/validation/validation.js';
 
-class AppServiceProvider extends ServiceProvider {
+class ValidationServiceProvider extends ServiceProvider {
   /**
      * Register services in the container.
      * 
      * This method will be called to bind services into the container.
      */
   register() {
+    this.app.container.bind("validation", () => new Validation(), true);
   }
   /**
    * Boot the services.
@@ -15,8 +17,8 @@ class AppServiceProvider extends ServiceProvider {
    * It's where you can perform additional initialization tasks.
    */
   async boot() {
-    console.log("AppServiceProvider booted!");
+    console.log("ValidationServiceProvider booted!");
   }
 }
 
-export { AppServiceProvider as default };
+export { ValidationServiceProvider as default };
