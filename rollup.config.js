@@ -9,7 +9,6 @@ export default {
           dir: 'dist',
           format: 'esm', // You can change the format based on your needs (e.g., cjs, esm)
           entryFileNames: '[name].js', // Use the name of the entry point for the output file
-          chunkFileNames: '[name]-[hash].js', // Handle chunked files if necessary
         },
     ],
 };
