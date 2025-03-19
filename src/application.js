@@ -1,6 +1,8 @@
 // Application.js
 import ServiceContainer from './core/container/ServiceContainer';
 import ServiceProvider from './contracts/ServiceProvider'; // Import base service provider
+export { default as AppServiceProvider } from "./providers/AppServiceProvider.js";
+export { default as ValidationServiceProvider } from "./providers/ValidationServiceProvider.js";
 
 class Application {
     constructor(config = {}) {

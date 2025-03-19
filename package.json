@@ -2,8 +2,8 @@
   "name": "stellifyjs",
   "version": "1.12.7",
   "type": "module",
-  "main": "src/application.js",
-  "module": "src/application.js",
+  "main": "dist/application.js",
+  "module": "dist/application.js",
   "exports": {
     ".": {
       "import": "./src/application.js",
@@ -23,6 +23,7 @@
   "description": "",
   "devDependencies": {
     "@types/node": "^22.13.10",
-    "jest": "^29.7.0"
+    "jest": "^29.7.0",
+    "rollup": "^4.36.0"
   }
 }

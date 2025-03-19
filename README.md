@@ -13,7 +13,28 @@ npm install stellifyjs
 
 ## Getting Started
 ```js
-import { Container, Http, Validator } from "stellifyjs";
+import Application from "stellifyjs";
+
+// Fetch config from browser (or fallback to default)
+const config = window.APP_CONFIG || { 
+    environment: 'development', 
+    debug: true, 
+    providers: [
+        './providers/AppServiceProvider.js',
+        './providers/ValidationServiceProvider.js',
+        // Add more providers as needed
+    ],
+    expose: {
+        validation: 'class' // Expose only these methods from ValidationService
+    }
+};
+
+// Create and boot the application
+const stellifyJsApp = new Application(config);
+await stellifyJsApp.boot();
+
+// Expose globally for debugging
+window.stellifyJsApp = stellifyJsApp;
 ```
 
 ## Service Container
