@@ -74,10 +74,12 @@ class Application {
                 await provider.boot();
             }
         }
+        console.log('exposeServices')
         this.exposeServices();
     }
 
     exposeServices() {
+        console.log('exposeServices', this.config.expose)
         if (!this.config.expose) return;
 
         for (const [serviceName, exposeOption] of Object.entries(this.config.expose)) {
