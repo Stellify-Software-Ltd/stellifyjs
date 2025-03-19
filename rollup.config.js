@@ -6,7 +6,7 @@ export default {
   input: {
     Application: 'src/Application.js',
     AppServiceProvider: 'src/providers/AppServiceProvider.js',
-    ValidationServiceProvider: 'src/providers/AppServiceProvider.js'
+    ValidationServiceProvider: 'src/providers/ValidationServiceProvider.js'
   },
   output: {
     dir: 'dist',

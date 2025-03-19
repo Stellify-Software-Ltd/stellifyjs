@@ -1,6 +1,6 @@
 import ServiceContainer from './core/container/ServiceContainer.js';
 export { default as AppServiceProvider } from './AppServiceProvider.js';
-export { default as ValidationServiceProvider } from './providers/ValidationServiceProvider.js';
+export { default as ValidationServiceProvider } from './ValidationServiceProvider.js';
 
 class Application {
   constructor(config = {}) {
