@@ -20,8 +20,8 @@ const config = window.APP_CONFIG || {
     environment: 'development', 
     debug: true, 
     providers: [
-        './providers/AppServiceProvider.js',
-        './providers/ValidationServiceProvider.js',
+        'AppServiceProvider',
+        'ValidationServiceProvider',
         // Add more providers as needed
     ],
     expose: {
