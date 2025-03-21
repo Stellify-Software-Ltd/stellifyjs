@@ -16,19 +16,22 @@ class Application {
      * Dynamically load and register service providers from the config.
      */
     async registerServiceProviders() {
-        if (this.config.providers && Array.isArray(this.config.providers)) {
-            for (const providerName of this.config.providers) {
-                try {
-                    if (this.config.production) {
-                        let { default: Provider } = await import(`/js/${providerName}.js`);
-                    } else {
-                        let { default: Provider } = await import(`/node_modules/stellifyjs/dist/${providerName}.js`);
-                    }
-                    // Register the provider
-                    this.registerProvider(Provider);
-                } catch (error) {
-                    console.error(`Failed to load provider at ${providerName}:`, error);
-                }
+        const { providers } = this.config;
+    
+        if (!providers?.length) {
+            return;
+        }
+
+        for (const providerName of providers) {
+            try {
+                const providerPath = this.config.production
+                    ? `/js/${providerName}.js`
+                    : `/node_modules/stellifyjs/dist/${providerName}.js`;
+                
+                const { default: Provider } = await import(providerPath);
+                this.registerProvider(Provider);
+            } catch (error) {
+                console.error(`Failed to load provider at ${providerName}:`, error);
             }
         }
     }
