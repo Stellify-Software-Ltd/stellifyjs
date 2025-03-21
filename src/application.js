@@ -19,7 +19,11 @@ class Application {
         if (this.config.providers && Array.isArray(this.config.providers)) {
             for (const providerName of this.config.providers) {
                 try {
-                    const { default: Provider } = await import(`/node_modules/stellifyjs/dist/${providerName}.js`);
+                    if (this.config.production) {
+                        let { default: Provider } = await import(`/js/${providerName}.js`);
+                    } else {
+                        let { default: Provider } = await import(`/node_modules/stellifyjs/dist/${providerName}.js`);
+                    }
                     // Register the provider
                     this.registerProvider(Provider);
                 } catch (error) {
