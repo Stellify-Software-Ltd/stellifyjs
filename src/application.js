@@ -114,6 +114,7 @@ class Application {
     }
 
     exposeHelpers() {
+        console.log('Exposing helpers...', typeof window);
         // Expose Arr and Str helpers globally
         if (typeof window !== 'undefined') {
             // Create a namespace if it doesn't exist
@@ -121,6 +122,7 @@ class Application {
             // Add the helpers to the namespace
             window.Stellify.Arr = Arr;
             window.Stellify.Str = Str;
+            console.log('Helpers exposed:', window.Stellify.Arr, window.Stellify.Str);
           }
     }
 }

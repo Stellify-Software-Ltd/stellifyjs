@@ -93,10 +93,12 @@ class Application {
     }
   }
   exposeHelpers() {
+    console.log("Exposing helpers...", typeof window);
     if (typeof window !== "undefined") {
       window.Stellify = window.Stellify || {};
       window.Stellify.Arr = Arr;
       window.Stellify.Str = Str;
+      console.log("Helpers exposed:", window.Stellify.Arr, window.Stellify.Str);
     }
   }
 }
