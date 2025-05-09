@@ -1,6 +1,6 @@
 import ServiceContainer from './core/container/ServiceContainer.js';
-export { default as Arr } from './core/support/array.js';
-export { default as Str } from './core/support/string.js';
+import Arr from './core/support/array.js';
+import Str from './core/support/string.js';
 export { default as AppServiceProvider } from './AppServiceProvider.js';
 export { default as ValidationServiceProvider } from './ValidationServiceProvider.js';
 
@@ -70,6 +70,7 @@ class Application {
       }
     }
     this.exposeServices();
+    this.exposeHelpers();
   }
   exposeServices() {
     if (!this.config.expose) return;
@@ -89,6 +90,13 @@ class Application {
           }, {});
         }
       }
+    }
+  }
+  exposeHelpers() {
+    if (typeof window !== "undefined") {
+      window.Stellify = window.Stellify || {};
+      window.Stellify.Arr = Arr;
+      window.Stellify.Str = Str;
     }
   }
 }

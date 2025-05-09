@@ -1,8 +1,8 @@
 // Application.js
 import ServiceContainer from './core/container/ServiceContainer';
 import ServiceProvider from './contracts/ServiceProvider'; // Import base service provider
-export { default as Arr } from './core/support/array.js'; // Export Arr helper
-export { default as Str } from './core/support/string.js'; // Export Str helper
+import { default as Arr } from './core/support/array.js'; // Export Arr helper
+import { default as Str } from './core/support/string.js'; // Export Str helper
 export { default as AppServiceProvider } from "./providers/AppServiceProvider.js";
 export { default as ValidationServiceProvider } from "./providers/ValidationServiceProvider.js";
 
@@ -84,6 +84,7 @@ class Application {
             }
         }
         this.exposeServices();
+        this.exposeHelpers();
     }
 
     exposeServices() {
@@ -110,6 +111,17 @@ class Application {
                 }
             }
         }
+    }
+
+    exposeHelpers() {
+        // Expose Arr and Str helpers globally
+        if (typeof window !== 'undefined') {
+            // Create a namespace if it doesn't exist
+            window.Stellify = window.Stellify || {};
+            // Add the helpers to the namespace
+            window.Stellify.Arr = Arr;
+            window.Stellify.Str = Str;
+          }
     }
 }
 

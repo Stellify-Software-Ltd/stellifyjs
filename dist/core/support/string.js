@@ -136,9 +136,5 @@ const Str = {
     return str.length > length ? str.substring(0, length) + "..." : str;
   }
 };
-if (typeof window !== "undefined") {
-  window.Stellify = window.Stellify || {};
-  window.Stellify.Str = Str;
-}
 
 export { Str as default };

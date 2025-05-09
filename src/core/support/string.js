@@ -175,12 +175,5 @@ const Str = {
   }
 };
 
-if (typeof window !== 'undefined') {
-  // Create a namespace if it doesn't exist
-  window.Stellify = window.Stellify || {};
-  // Add the Arr helper to the namespace
-  window.Stellify.Str = Str;
-}
-
 export default Str;
   

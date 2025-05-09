@@ -84,9 +84,5 @@ const Arr = {
     return arr.length ? arr[arr.length - 1] : void 0;
   }
 };
-if (typeof window !== "undefined") {
-  window.Stellify = window.Stellify || {};
-  window.Stellify.Arr = Arr;
-}
 
 export { Arr as default };
