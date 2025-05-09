@@ -1,6 +1,6 @@
 {
   "name": "stellifyjs",
-  "version": "1.16.0",
+  "version": "1.16.1",
   "type": "module",
   "main": "dist/application.js",
   "module": "dist/application.js",
