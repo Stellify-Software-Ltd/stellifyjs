@@ -89,4 +89,4 @@ if (typeof window !== "undefined") {
   window.Stellify.Arr = Arr;
 }
 
-export { Arr };
+export { Arr as default };

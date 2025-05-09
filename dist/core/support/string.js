@@ -141,4 +141,4 @@ if (typeof window !== "undefined") {
   window.Stellify.Str = Str;
 }
 
-export { Str };
+export { Str as default };

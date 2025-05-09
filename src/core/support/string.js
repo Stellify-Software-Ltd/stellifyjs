@@ -1,4 +1,4 @@
-export const Str = {
+const Str = {
   /**
    * Convert a word to its plural form.
    * @param {string} str
@@ -181,4 +181,6 @@ if (typeof window !== 'undefined') {
   // Add the Arr helper to the namespace
   window.Stellify.Str = Str;
 }
+
+export default Str;
   

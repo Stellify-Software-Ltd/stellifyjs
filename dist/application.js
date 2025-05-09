@@ -1,6 +1,6 @@
 import ServiceContainer from './core/container/ServiceContainer.js';
-import './core/support/array.js';
-import './core/support/string.js';
+export { default as Arr } from './core/support/array.js';
+export { default as Str } from './core/support/string.js';
 export { default as AppServiceProvider } from './AppServiceProvider.js';
 export { default as ValidationServiceProvider } from './ValidationServiceProvider.js';
 

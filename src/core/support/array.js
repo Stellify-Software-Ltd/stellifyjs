@@ -1,4 +1,4 @@
-export const Arr = {
+const Arr = {
     /**
      * Get a value from a nested object using dot notation.
      * @param {Object} obj
@@ -99,4 +99,6 @@ if (typeof window !== 'undefined') {
   // Add the Arr helper to the namespace
   window.Stellify.Arr = Arr;
 }
+
+export default Arr;
   
