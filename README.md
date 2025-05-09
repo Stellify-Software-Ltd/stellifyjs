@@ -6,6 +6,8 @@ StellifyJS is a Laravel-inspired **front-end only framework** complete with a se
 
 StellifyJS was created to provide the users of [Stellify](https://github.com/Stellify-Software-Ltd/stellify) the convenience they experience working with Laravel on the server, client-side. The various classes and helper functions provided are automatically exposed via the Window object in the Stellify editor (found at [stellisoft.com](https://stellisoft.com)). This means they can be accessed directly without installation. Alternatively, you can pull down the package and bundle it up with various library extensions of your choosing before requesting it from a server or CDN.
 
+View on npm [here](https://www.npmjs.com/package/stellifyjs).
+
 ## Installation
 ```sh
 npm install stellifyjs
@@ -52,6 +54,9 @@ Now, from anywhere in the framework, you can access string helpers dynamically:
 const strHelper = container.resolve("str");
 console.log(strHelper.slug("Hello World!")); // "hello-world"
 ```
+## Helpers
+
+Helper methods are exposed on the window object under the namespace "Stellify".
 
 ## String Helper Methods
 Converts a word to its plural form.

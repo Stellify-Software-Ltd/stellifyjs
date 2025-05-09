@@ -1,4 +1,6 @@
 import ServiceContainer from './core/container/ServiceContainer.js';
+import './core/support/array.js';
+import './core/support/string.js';
 export { default as AppServiceProvider } from './AppServiceProvider.js';
 export { default as ValidationServiceProvider } from './ValidationServiceProvider.js';
 
@@ -13,22 +15,17 @@ class Application {
    */
   async registerServiceProviders() {
     const { providers } = this.config;
-    
     if (!providers?.length) {
-        return;
+      return;
     }
-
     for (const providerName of providers) {
-        try {
-            const providerPath = this.config.production
-                ? `/js/${providerName}.js`
-                : `/node_modules/stellifyjs/dist/${providerName}.js`;
-            
-            const { default: Provider } = await import(providerPath);
-            this.registerProvider(Provider);
-        } catch (error) {
-            console.error(`Failed to load provider at ${providerName}:`, error);
-        }
+      try {
+        const providerPath = this.config.production ? `/js/${providerName}.js` : `/node_modules/stellifyjs/dist/${providerName}.js`;
+        const { default: Provider } = await import(providerPath);
+        this.registerProvider(Provider);
+      } catch (error) {
+        console.error(`Failed to load provider at ${providerName}:`, error);
+      }
     }
   }
   /**
