@@ -1,33 +1,22 @@
 {
-  "name": "stellifyjs",
-  "version": "1.16.5",
+  "name": "stellify-framework",
+  "version": "0.1.0",
+  "description": "Frontend framework built for AI code generation",
   "type": "module",
-  "main": "dist/application.js",
-  "module": "dist/application.js",
-  "exports": {
-    ".": {
-      "import": "./src/application.js",
-      "require": "./src/application.js",
-      "default": "./src/application.js"
-    }
-  },
-  "files": [
-    "src",
-    "dist"
-  ],
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
-    "test": "node --experimental-vm-modules ./node_modules/.bin/jest"
+    "build": "tsc",
+    "test": "vitest"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
+  "exports": {
+    ".": "./dist/index.js",
+    "./form": "./dist/form/index.js"
+  },
+  "keywords": ["framework", "ai", "frontend"],
+  "license": "MIT",
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^28.0.3",
-    "@rollup/plugin-node-resolve": "^16.0.1",
-    "@types/node": "^22.13.10",
-    "jest": "^29.7.0",
-    "rollup": "^4.36.0",
-    "rollup-plugin-esbuild": "^6.2.1"
+    "typescript": "^5.3.0",
+    "vitest": "^1.0.0"
   }
 }
