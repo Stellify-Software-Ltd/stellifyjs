@@ -83,7 +83,7 @@ See [STELLIFY_FRAMEWORK.md](./STELLIFY_FRAMEWORK.md) for complete API reference 
 
 ## Part of Stellify
 
-This framework integrates with [Stellify](https://stellify.cloud), a coding platform for AI-assisted development:
+This framework integrates with [Stellify](https://stellisoft.com), a coding platform for AI-assisted development:
 
 - **Backend**: Laravel/PHP via Stellify's MCP tools
 - **Frontend**: This framework for consistent, AI-friendly primitives
