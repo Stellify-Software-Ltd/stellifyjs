@@ -1,4 +1,4 @@
-# Stellify Framework
+# StellifyJS
 
 A frontend framework built for AI code generation, not just human developers.
 
