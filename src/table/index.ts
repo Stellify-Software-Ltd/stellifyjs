@@ -7,7 +7,7 @@ type ColumnOptions = {
   formatter?: (value: unknown) => string
 }
 
-interface Column {
+export interface Column {
   key: string
   options: ColumnOptions
 }
@@ -97,8 +97,8 @@ export class Table {
       result.sort((a, b) => {
         const aVal = a[key]
         const bVal = b[key]
-        if (aVal < bVal) return -1 * dir
-        if (aVal > bVal) return 1 * dir
+        if ((aVal as string | number) < (bVal as string | number)) return -1 * dir
+        if ((aVal as string | number) > (bVal as string | number)) return 1 * dir
         return 0
       })
     }

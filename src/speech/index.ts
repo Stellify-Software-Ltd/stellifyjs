@@ -22,8 +22,20 @@ interface Voice {
   local: boolean
 }
 
+interface SpeechRecognitionType {
+  continuous: boolean
+  interimResults: boolean
+  lang: string
+  maxAlternatives: number
+  onresult: ((event: any) => void) | null
+  onend: (() => void) | null
+  onerror: ((event: any) => void) | null
+  start(): void
+  stop(): void
+}
+
 export class Speech {
-  private recognition: SpeechRecognition | null = null
+  private recognition: SpeechRecognitionType | null = null
   private synthesis: SpeechSynthesis
   private currentUtterance: SpeechSynthesisUtterance | null = null
   private resultCallback: SpeechEventCallback | null = null
@@ -47,19 +59,19 @@ export class Speech {
   }
 
   listen(options: ListenOptions = {}): this {
-    const SpeechRecognition = window.SpeechRecognition || (window as any).webkitSpeechRecognition
+    const SpeechRecognitionCtor = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
 
-    if (!SpeechRecognition) {
+    if (!SpeechRecognitionCtor) {
       throw new SpeechError('Speech recognition is not supported')
     }
 
-    this.recognition = new SpeechRecognition()
-    this.recognition.continuous = options.continuous ?? false
-    this.recognition.interimResults = options.interimResults ?? false
-    this.recognition.lang = options.language ?? 'en-US'
-    this.recognition.maxAlternatives = options.maxAlternatives ?? 1
+    const recognition: SpeechRecognitionType = new SpeechRecognitionCtor()
+    recognition.continuous = options.continuous ?? false
+    recognition.interimResults = options.interimResults ?? false
+    recognition.lang = options.language ?? 'en-US'
+    recognition.maxAlternatives = options.maxAlternatives ?? 1
 
-    this.recognition.onresult = (event) => {
+    recognition.onresult = (event: any) => {
       const result = event.results[event.results.length - 1]
       const transcript = result[0].transcript
 
@@ -70,15 +82,16 @@ export class Speech {
       }
     }
 
-    this.recognition.onend = () => {
+    recognition.onend = () => {
       this.endCallback?.()
     }
 
-    this.recognition.onerror = (event) => {
+    recognition.onerror = (event: any) => {
       this.errorCallback?.(new SpeechError(event.error))
     }
 
-    this.recognition.start()
+    recognition.start()
+    this.recognition = recognition
     return this
   }
 

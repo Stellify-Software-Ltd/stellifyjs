@@ -1,0 +1,35 @@
+type TimeUnit = 'milliseconds' | 'seconds' | 'minutes' | 'hours' | 'days' | 'weeks' | 'months' | 'years';
+type DateInput = Date | string | number;
+export declare class Time {
+    private date;
+    private constructor();
+    static now(): Time;
+    static create(date?: DateInput): Time;
+    static parse(str: string, pattern?: string): Time;
+    format(pattern: string): string;
+    toISO(): string;
+    toDate(): Date;
+    toTimestamp(): number;
+    toUnix(): number;
+    add(amount: number, unit: TimeUnit): Time;
+    subtract(amount: number, unit: TimeUnit): Time;
+    diff(other: DateInput, unit?: TimeUnit): number;
+    isBefore(other: DateInput): boolean;
+    isAfter(other: DateInput): boolean;
+    isSame(other: DateInput, unit?: TimeUnit): boolean;
+    isBetween(start: DateInput, end: DateInput): boolean;
+    startOf(unit: TimeUnit): Time;
+    endOf(unit: TimeUnit): Time;
+    year(): number;
+    month(): number;
+    day(): number;
+    weekday(): number;
+    hour(): number;
+    minute(): number;
+    second(): number;
+    relative(baseDate?: DateInput): string;
+    clone(): Time;
+    private unitToMs;
+    private msToUnit;
+}
+export {};

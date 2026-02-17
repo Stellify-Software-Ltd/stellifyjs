@@ -76,7 +76,7 @@ export class Auth {
     this.user = data.user || data
     this.notifyListeners()
 
-    return this.user
+    return this.user!
   }
 
   async logout(): Promise<void> {
