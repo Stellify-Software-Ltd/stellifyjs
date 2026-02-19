@@ -11,7 +11,12 @@ export class Http {
         return new Http(baseUrl, options);
     }
     buildUrl(path, params) {
-        const url = new URL(path, this.baseUrl || window.location.origin);
+        // If baseUrl is a relative path, prepend the origin
+        let base = this.baseUrl;
+        if (base && !base.startsWith('http://') && !base.startsWith('https://')) {
+            base = window.location.origin + base;
+        }
+        const url = new URL(path || '', base || window.location.origin);
         if (params) {
             for (const [key, value] of Object.entries(params)) {
                 url.searchParams.set(key, value);
