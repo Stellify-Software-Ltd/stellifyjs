@@ -10,13 +10,35 @@ export class Http {
     static create(baseUrl = '', options = {}) {
         return new Http(baseUrl, options);
     }
+    getOrigin() {
+        // Handle iframe contexts where window.location.origin might be 'null' or unavailable
+        try {
+            const origin = window.location.origin;
+            if (origin && origin !== 'null') {
+                return origin;
+            }
+            // Try parent window if we're in an iframe
+            if (window.parent && window.parent !== window) {
+                const parentOrigin = window.parent.location.origin;
+                if (parentOrigin && parentOrigin !== 'null') {
+                    return parentOrigin;
+                }
+            }
+        }
+        catch {
+            // Cross-origin iframe - can't access parent
+        }
+        // Fallback: construct from protocol + host
+        return `${window.location.protocol}//${window.location.host}`;
+    }
     buildUrl(path, params) {
+        const origin = this.getOrigin();
         // If baseUrl is a relative path, prepend the origin
         let base = this.baseUrl;
         if (base && !base.startsWith('http://') && !base.startsWith('https://')) {
-            base = window.location.origin + base;
+            base = origin + base;
         }
-        const url = new URL(path || '', base || window.location.origin);
+        const url = new URL(path || '', base || origin);
         if (params) {
             for (const [key, value] of Object.entries(params)) {
                 url.searchParams.set(key, value);

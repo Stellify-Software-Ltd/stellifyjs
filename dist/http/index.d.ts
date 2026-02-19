@@ -9,6 +9,7 @@ export declare class Http {
     private defaultTimeout;
     private constructor();
     static create(baseUrl?: string, options?: HttpOptions): Http;
+    private getOrigin;
     private buildUrl;
     private request;
     get<T = unknown>(path: string, options?: HttpOptions): Promise<T>;
