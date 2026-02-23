@@ -9,6 +9,12 @@ export declare class Http {
     private defaultTimeout;
     private constructor();
     static create(baseUrl?: string, options?: HttpOptions): Http;
+    private static defaultInstance;
+    static get<T = unknown>(path: string, options?: HttpOptions): Promise<T>;
+    static post<T = unknown>(path: string, data?: unknown, options?: HttpOptions): Promise<T>;
+    static put<T = unknown>(path: string, data?: unknown, options?: HttpOptions): Promise<T>;
+    static patch<T = unknown>(path: string, data?: unknown, options?: HttpOptions): Promise<T>;
+    static delete<T = unknown>(path: string, options?: HttpOptions): Promise<T>;
     private getOrigin;
     private buildUrl;
     private request;

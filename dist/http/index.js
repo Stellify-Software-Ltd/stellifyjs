@@ -10,6 +10,23 @@ export class Http {
     static create(baseUrl = '', options = {}) {
         return new Http(baseUrl, options);
     }
+    // Static convenience methods using a default instance
+    static defaultInstance = new Http();
+    static get(path, options = {}) {
+        return Http.defaultInstance.get(path, options);
+    }
+    static post(path, data, options = {}) {
+        return Http.defaultInstance.post(path, data, options);
+    }
+    static put(path, data, options = {}) {
+        return Http.defaultInstance.put(path, data, options);
+    }
+    static patch(path, data, options = {}) {
+        return Http.defaultInstance.patch(path, data, options);
+    }
+    static delete(path, options = {}) {
+        return Http.defaultInstance.delete(path, options);
+    }
     getOrigin() {
         // Handle iframe contexts where window.location.origin might be 'null' or unavailable
         try {

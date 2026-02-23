@@ -24,6 +24,29 @@ export class Http {
     return new Http(baseUrl, options)
   }
 
+  // Static convenience methods using a default instance
+  private static defaultInstance: Http = new Http()
+
+  static get<T = unknown>(path: string, options: HttpOptions = {}): Promise<T> {
+    return Http.defaultInstance.get<T>(path, options)
+  }
+
+  static post<T = unknown>(path: string, data?: unknown, options: HttpOptions = {}): Promise<T> {
+    return Http.defaultInstance.post<T>(path, data, options)
+  }
+
+  static put<T = unknown>(path: string, data?: unknown, options: HttpOptions = {}): Promise<T> {
+    return Http.defaultInstance.put<T>(path, data, options)
+  }
+
+  static patch<T = unknown>(path: string, data?: unknown, options: HttpOptions = {}): Promise<T> {
+    return Http.defaultInstance.patch<T>(path, data, options)
+  }
+
+  static delete<T = unknown>(path: string, options: HttpOptions = {}): Promise<T> {
+    return Http.defaultInstance.delete<T>(path, options)
+  }
+
   private getOrigin(): string {
     // Handle iframe contexts where window.location.origin might be 'null' or unavailable
     try {
