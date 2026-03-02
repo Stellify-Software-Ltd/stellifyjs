@@ -175,6 +175,27 @@ export class Http {
       timeout: ms
     })
   }
+
+  /**
+   * Fetch paginated data and return just the items array.
+   * Automatically extracts .data from Laravel-style paginated responses.
+   *
+   * @example
+   * // Instead of: const response = await Http.get('/api/notes'); notes.value = response.data;
+   * // Use: notes.value = await Http.items('/api/notes');
+   */
+  static async items<T = unknown>(path: string, options: HttpOptions = {}): Promise<T[]> {
+    const response = await Http.defaultInstance.get<{ data: T[] }>(path, options)
+    return response.data ?? []
+  }
+
+  /**
+   * Instance method for fetching paginated items
+   */
+  async items<T = unknown>(path: string, options: HttpOptions = {}): Promise<T[]> {
+    const response = await this.get<{ data: T[] }>(path, options)
+    return response.data ?? []
+  }
 }
 
 export class HttpError extends Error {

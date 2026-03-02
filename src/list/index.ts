@@ -213,6 +213,22 @@ export class List<T = unknown> {
     return this.toArray()
   }
 
+  /**
+   * Makes List iterable, allowing it to work with for...of loops and Vue's v-for directive.
+   * This eliminates the need to call .toArray() before using with v-for.
+   */
+  [Symbol.iterator](): Iterator<T> {
+    return this.items[Symbol.iterator]()
+  }
+
+  /**
+   * Returns the length of the list.
+   * Required for Vue reactivity to properly detect List as array-like.
+   */
+  get length(): number {
+    return this.items.length
+  }
+
   clone(): List<T> {
     return new List([...this.items])
   }
