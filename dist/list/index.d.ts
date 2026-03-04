@@ -43,6 +43,16 @@ export declare class List<T = unknown> {
     clear(): List<T>;
     toArray(): T[];
     toJSON(): T[];
+    /**
+     * Makes List iterable, allowing it to work with for...of loops and Vue's v-for directive.
+     * This eliminates the need to call .toArray() before using with v-for.
+     */
+    [Symbol.iterator](): Iterator<T>;
+    /**
+     * Returns the length of the list.
+     * Required for Vue reactivity to properly detect List as array-like.
+     */
+    get length(): number;
     clone(): List<T>;
     sum(): number;
     avg(): number;

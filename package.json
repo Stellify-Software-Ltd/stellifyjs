@@ -1,6 +1,6 @@
 {
   "name": "stellify-framework",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Frontend framework built for AI code generation",
   "type": "module",
   "main": "dist/index.js",

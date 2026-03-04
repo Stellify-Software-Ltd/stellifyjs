@@ -171,6 +171,20 @@ export class List {
     toJSON() {
         return this.toArray();
     }
+    /**
+     * Makes List iterable, allowing it to work with for...of loops and Vue's v-for directive.
+     * This eliminates the need to call .toArray() before using with v-for.
+     */
+    [Symbol.iterator]() {
+        return this.items[Symbol.iterator]();
+    }
+    /**
+     * Returns the length of the list.
+     * Required for Vue reactivity to properly detect List as array-like.
+     */
+    get length() {
+        return this.items.length;
+    }
     clone() {
         return new List([...this.items]);
     }

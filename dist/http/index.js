@@ -132,6 +132,82 @@ export class Http {
             timeout: ms
         });
     }
+    /**
+     * Fetch paginated data and return just the items array.
+     * Automatically extracts .data from Laravel-style paginated responses.
+     *
+     * @example
+     * // Instead of: const response = await Http.get('/api/notes'); notes.value = response.data;
+     * // Use: notes.value = await Http.items('/api/notes');
+     */
+    static async items(path, options = {}) {
+        const response = await Http.defaultInstance.get(path, options);
+        return response.data ?? [];
+    }
+    /**
+     * Instance method for fetching paginated items
+     */
+    async items(path, options = {}) {
+        const response = await this.get(path, options);
+        return response.data ?? [];
+    }
+    /**
+     * Create a resource and return just the created item.
+     * Automatically extracts .data from Laravel-style responses.
+     *
+     * @example
+     * // Instead of: const response = await Http.post('/api/notes', data); notes.unshift(response.data);
+     * // Use: const note = await Http.store('/api/notes', data); notes.unshift(note);
+     */
+    static async store(path, data, options = {}) {
+        const response = await Http.defaultInstance.post(path, data, options);
+        return response.data;
+    }
+    /**
+     * Instance method for creating a resource
+     */
+    async store(path, data, options = {}) {
+        const response = await this.post(path, data, options);
+        return response.data;
+    }
+    /**
+     * Update a resource and return just the updated item.
+     * Automatically extracts .data from Laravel-style responses.
+     *
+     * @example
+     * // Instead of: const response = await Http.put('/api/notes/1', data); Object.assign(note, response.data);
+     * // Use: const updated = await Http.update('/api/notes/1', data); Object.assign(note, updated);
+     */
+    static async update(path, data, options = {}) {
+        const response = await Http.defaultInstance.put(path, data, options);
+        return response.data;
+    }
+    /**
+     * Instance method for updating a resource
+     */
+    async update(path, data, options = {}) {
+        const response = await this.put(path, data, options);
+        return response.data;
+    }
+    /**
+     * Delete a resource and return the response data (if any).
+     * Automatically extracts .data from Laravel-style responses.
+     *
+     * @example
+     * // Instead of: await Http.delete('/api/notes/1');
+     * // Use: await Http.destroy('/api/notes/1');
+     */
+    static async destroy(path, options = {}) {
+        const response = await Http.defaultInstance.delete(path, options);
+        return response.data ?? null;
+    }
+    /**
+     * Instance method for deleting a resource
+     */
+    async destroy(path, options = {}) {
+        const response = await this.delete(path, options);
+        return response.data ?? null;
+    }
 }
 export class HttpError extends Error {
     status;

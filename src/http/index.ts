@@ -196,6 +196,69 @@ export class Http {
     const response = await this.get<{ data: T[] }>(path, options)
     return response.data ?? []
   }
+
+  /**
+   * Create a resource and return just the created item.
+   * Automatically extracts .data from Laravel-style responses.
+   *
+   * @example
+   * // Instead of: const response = await Http.post('/api/notes', data); notes.unshift(response.data);
+   * // Use: const note = await Http.store('/api/notes', data); notes.unshift(note);
+   */
+  static async store<T = unknown>(path: string, data?: unknown, options: HttpOptions = {}): Promise<T> {
+    const response = await Http.defaultInstance.post<{ data: T }>(path, data, options)
+    return response.data
+  }
+
+  /**
+   * Instance method for creating a resource
+   */
+  async store<T = unknown>(path: string, data?: unknown, options: HttpOptions = {}): Promise<T> {
+    const response = await this.post<{ data: T }>(path, data, options)
+    return response.data
+  }
+
+  /**
+   * Update a resource and return just the updated item.
+   * Automatically extracts .data from Laravel-style responses.
+   *
+   * @example
+   * // Instead of: const response = await Http.put('/api/notes/1', data); Object.assign(note, response.data);
+   * // Use: const updated = await Http.update('/api/notes/1', data); Object.assign(note, updated);
+   */
+  static async update<T = unknown>(path: string, data?: unknown, options: HttpOptions = {}): Promise<T> {
+    const response = await Http.defaultInstance.put<{ data: T }>(path, data, options)
+    return response.data
+  }
+
+  /**
+   * Instance method for updating a resource
+   */
+  async update<T = unknown>(path: string, data?: unknown, options: HttpOptions = {}): Promise<T> {
+    const response = await this.put<{ data: T }>(path, data, options)
+    return response.data
+  }
+
+  /**
+   * Delete a resource and return the response data (if any).
+   * Automatically extracts .data from Laravel-style responses.
+   *
+   * @example
+   * // Instead of: await Http.delete('/api/notes/1');
+   * // Use: await Http.destroy('/api/notes/1');
+   */
+  static async destroy<T = unknown>(path: string, options: HttpOptions = {}): Promise<T | null> {
+    const response = await Http.defaultInstance.delete<{ data?: T }>(path, options)
+    return response.data ?? null
+  }
+
+  /**
+   * Instance method for deleting a resource
+   */
+  async destroy<T = unknown>(path: string, options: HttpOptions = {}): Promise<T | null> {
+    const response = await this.delete<{ data?: T }>(path, options)
+    return response.data ?? null
+  }
 }
 
 export class HttpError extends Error {
