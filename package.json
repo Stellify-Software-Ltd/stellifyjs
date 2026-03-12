@@ -1,6 +1,6 @@
 {
   "name": "stellify-framework",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Frontend framework built for AI code generation",
   "type": "module",
   "main": "dist/index.js",
@@ -13,15 +13,23 @@
     ".": "./dist/index.js",
     "./form": "./dist/form/index.js"
   },
-  "keywords": ["framework", "ai", "frontend"],
+  "keywords": [
+    "framework",
+    "ai",
+    "frontend"
+  ],
   "license": "MIT",
   "peerDependencies": {
     "react": ">=17.0.0",
     "vue": ">=3.0.0"
   },
   "peerDependenciesMeta": {
-    "react": { "optional": true },
-    "vue": { "optional": true }
+    "react": {
+      "optional": true
+    },
+    "vue": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@types/react": "^18.0.0",
