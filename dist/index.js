@@ -1,7 +1,7 @@
 // Data & Forms
 export { Form } from './form';
 export { Table } from './table';
-export { List } from './list';
+export { Collection } from './collection';
 export { Tree } from './tree';
 // Network
 export { Http, HttpError } from './http';
