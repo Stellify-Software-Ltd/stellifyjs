@@ -1,6 +1,6 @@
 {
   "name": "stellify-framework",
-  "version": "0.1.8",
+  "version": "0.2.0",
   "description": "Frontend framework built for AI code generation",
   "type": "module",
   "main": "dist/index.js",
@@ -11,7 +11,8 @@
   },
   "exports": {
     ".": "./dist/index.js",
-    "./form": "./dist/form/index.js"
+    "./form": "./dist/form/index.js",
+    "./vue": "./dist/adapters/vue/index.js"
   },
   "keywords": [
     "framework",
