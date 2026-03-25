@@ -102,8 +102,25 @@ export class Http {
             throw error;
         }
     }
+    /**
+     * Normalize options for GET/DELETE requests.
+     * If the object contains known option keys (params, headers, timeout), use as-is.
+     * Otherwise, treat the entire object as query params for a simpler API.
+     *
+     * This allows both:
+     *   Http.get('/api/users', { page: 1, per_page: 15 })
+     *   Http.get('/api/users', { params: { page: 1 }, headers: { 'X-Custom': 'value' } })
+     */
+    normalizeQueryOptions(options) {
+        if (!options || typeof options !== 'object') {
+            return {};
+        }
+        const optionKeys = ['params', 'headers', 'timeout'];
+        const hasOptionKeys = optionKeys.some(key => key in options);
+        return hasOptionKeys ? options : { params: options };
+    }
     async get(path, options = {}) {
-        return this.request(path, { ...options, method: 'GET' });
+        return this.request(path, { ...this.normalizeQueryOptions(options), method: 'GET' });
     }
     async post(path, data, options = {}) {
         return this.request(path, { ...options, method: 'POST', body: data });
@@ -115,7 +132,7 @@ export class Http {
         return this.request(path, { ...options, method: 'PATCH', body: data });
     }
     async delete(path, options = {}) {
-        return this.request(path, { ...options, method: 'DELETE' });
+        return this.request(path, { ...this.normalizeQueryOptions(options), method: 'DELETE' });
     }
     withHeaders(headers) {
         return new Http(this.baseUrl, {
