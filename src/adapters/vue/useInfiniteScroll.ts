@@ -338,6 +338,20 @@ export function useInfiniteScroll<T = unknown>(
       error.value = e instanceof Error ? e : new Error(String(e))
     } finally {
       loading.value = false
+
+      // After loading completes, check if sentinel is still visible
+      // This handles the case where all content fits on screen
+      if (hasMore.value && sentinelRef.value) {
+        // Use requestAnimationFrame to let the DOM update first
+        requestAnimationFrame(() => {
+          if (!sentinelRef.value) return
+          const rect = sentinelRef.value.getBoundingClientRect()
+          const isVisible = rect.top < window.innerHeight + threshold
+          if (isVisible && !loading.value && hasMore.value) {
+            loadMore()
+          }
+        })
+      }
     }
   }
 
