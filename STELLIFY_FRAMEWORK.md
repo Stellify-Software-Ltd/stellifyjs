@@ -122,13 +122,96 @@ const form = useForm({ name: '', email: '' })
 ### Table Adapter
 Reactive sorting, filtering, pagination:
 ```javascript
-// React
-import { useTable } from 'stellify-framework/adapters/react'
+// Vue
+import { useTable } from 'stellify-framework'
 const table = useTable(users)
 
 table.sort('name')
 table.filter(row => row.active)
 table.paginate(10)
+```
+
+## Vue Composables
+
+### useInfiniteScroll
+Automatic pagination with scroll detection using IntersectionObserver:
+```javascript
+import { useInfiniteScroll } from 'stellify-framework'
+
+const { items, loading, hasMore, sentinelRef } = useInfiniteScroll('/api/posts', {
+  perPage: 12,        // Items per page (default: 15)
+  threshold: 200,     // Pixels from bottom to trigger (default: 200)
+  immediate: true,    // Load first page on mount (default: true)
+  keyField: 'id',     // Field for deduplication (default: 'id')
+})
+
+// Returns:
+// - items: Ref<Collection<T>> - All loaded items as a reactive Collection
+// - loading: Ref<boolean> - Currently loading
+// - hasMore: Ref<boolean> - More items available
+// - loadMore: () => Promise - Manual load trigger
+// - reset: () => Promise - Reset and reload from beginning
+// - sentinelRef: Ref<HTMLElement> - Attach to sentinel element
+```
+
+### useLiveData
+HTTP fetch with WebSocket real-time updates:
+```javascript
+import { useLiveData } from 'stellify-framework'
+
+// Auto-subscribe to model CRUD events
+const { data, loading, connected } = useLiveData('/api/notifications', {
+  model: 'Notification',  // Subscribes to NotificationCreated/Updated/Deleted
+})
+
+// Or custom channel/event
+const { data } = useLiveData('/api/messages', {
+  channel: 'chat.room.1',
+  event: 'MessageSent',
+  merge: 'append',  // 'prepend' | 'append' | 'replace' | 'upsert' | custom function
+})
+
+// Returns:
+// - data: Ref<Collection<T>> - Reactive data
+// - loading: Ref<boolean> - Initial load in progress
+// - connected: Ref<boolean> - WebSocket connected
+// - refresh: () => Promise - Reload from server
+// - push/remove/update: Local mutations
+```
+
+### useQueryState
+Two-way binding between Vue refs and URL query parameters:
+```javascript
+import { useQueryState } from 'stellify-framework'
+
+const { search, page, sort } = useQueryState({
+  search: { default: '', debounce: 300 },
+  page: { default: 1, type: 'number' },
+  sort: 'created_at',  // Shorthand for { default: 'created_at' }
+})
+
+// Now search.value syncs with ?search=...
+// Back/forward navigation updates the refs
+// Type coercion: 'string' | 'number' | 'boolean' | 'array'
+```
+
+### useLazyLoad
+Defer data fetching until element enters viewport:
+```javascript
+import { useLazyLoad, Http } from 'stellify-framework'
+
+const { data, loading, visible, targetRef } = useLazyLoad(
+  () => Http.get('/api/heavy-data'),
+  { rootMargin: '200px' }  // Pre-load 200px before visible
+)
+
+// Returns:
+// - data: Ref<T | null> - Loaded data
+// - visible: Ref<boolean> - Element is visible
+// - loading: Ref<boolean> - Currently loading
+// - loaded: Ref<boolean> - Has been loaded at least once
+// - targetRef: Ref<HTMLElement> - Attach to target element
+// - load: () => Promise - Manual load trigger
 ```
 
 ## Usage Examples
@@ -329,7 +412,11 @@ stellify-framework/
 │   │   └── vue/
 │   │       ├── useStellify.ts
 │   │       ├── useForm.ts
-│   │       └── useTable.ts
+│   │       ├── useTable.ts
+│   │       ├── useInfiniteScroll.ts
+│   │       ├── useLiveData.ts
+│   │       ├── useQueryState.ts
+│   │       └── useLazyLoad.ts
 │   └── index.ts
 ├── package.json
 └── tsconfig.json

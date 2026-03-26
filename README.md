@@ -56,18 +56,42 @@ Chat.create()
 | AI & Language | Speech, Chat, Embed, Diff |
 | Utilities | Time |
 
+## Vue Composables
+
+```javascript
+import { useInfiniteScroll, useLiveData, useQueryState, useLazyLoad } from 'stellify-framework'
+
+// Infinite scroll - replaces 50+ lines of manual pagination code
+const { items, loading, hasMore, sentinelRef } = useInfiniteScroll('/api/posts', {
+  perPage: 12,
+  threshold: 200
+})
+
+// Real-time data - HTTP fetch + WebSocket subscription
+const { data, connected } = useLiveData('/api/notifications', {
+  model: 'Notification'  // Auto-subscribes to Created/Updated/Deleted events
+})
+
+// URL state binding - two-way sync between refs and query params
+const { search, page } = useQueryState({
+  search: { default: '', debounce: 300 },
+  page: { default: 1, type: 'number' }
+})
+
+// Lazy loading - defer fetch until element is visible
+const { data, visible, targetRef } = useLazyLoad(() => Http.get('/api/heavy-data'))
+```
+
 ## Framework Adapters
 
 ```javascript
-// React
-import { useForm } from 'stellify-framework/adapters/react'
-const form = useForm({ name: '' })
-<input {...form.bind('name')} />
-
 // Vue
-import { useForm } from 'stellify-framework/adapters/vue'
+import { useForm, useTable } from 'stellify-framework'
 const form = useForm({ name: '' })
-<input v-model="form.data.name" />
+<input v-model="form.state.data.name" />
+
+// React (coming soon)
+import { useForm } from 'stellify-framework/react'
 ```
 
 ## Design Principles
