@@ -192,25 +192,55 @@ export function useInfiniteScroll<T = unknown>(
    * Build URL with query params
    */
   const buildUrl = (pageValue: number | string): string => {
-    const url = new URL(endpoint, window.location.origin)
+    // Handle relative URLs without requiring window.location.origin
+    // This makes the composable work in SSR and non-standard browser contexts
+    try {
+      // Try to construct a full URL
+      const origin = typeof window !== 'undefined' && window.location?.origin
+        ? window.location.origin
+        : 'http://localhost'
+      const url = new URL(endpoint, origin)
 
-    // Add custom params
-    for (const [key, value] of Object.entries(params)) {
-      url.searchParams.set(key, String(value))
-    }
-
-    // Add pagination params
-    url.searchParams.set('per_page', String(perPage))
-
-    if (cursor) {
-      if (pageValue) {
-        url.searchParams.set('cursor', String(pageValue))
+      // Add custom params
+      for (const [key, value] of Object.entries(params)) {
+        url.searchParams.set(key, String(value))
       }
-    } else {
-      url.searchParams.set('page', String(pageValue))
-    }
 
-    return url.pathname + url.search
+      // Add pagination params
+      url.searchParams.set('per_page', String(perPage))
+
+      if (cursor) {
+        if (pageValue) {
+          url.searchParams.set('cursor', String(pageValue))
+        }
+      } else {
+        url.searchParams.set('page', String(pageValue))
+      }
+
+      return url.pathname + url.search
+    } catch {
+      // Fallback: manually build query string for relative URLs
+      const queryParams = new URLSearchParams()
+
+      // Add custom params
+      for (const [key, value] of Object.entries(params)) {
+        queryParams.set(key, String(value))
+      }
+
+      // Add pagination params
+      queryParams.set('per_page', String(perPage))
+
+      if (cursor) {
+        if (pageValue) {
+          queryParams.set('cursor', String(pageValue))
+        }
+      } else {
+        queryParams.set('page', String(pageValue))
+      }
+
+      const queryString = queryParams.toString()
+      return queryString ? `${endpoint}?${queryString}` : endpoint
+    }
   }
 
   /**
