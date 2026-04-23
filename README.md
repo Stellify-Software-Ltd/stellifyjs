@@ -45,16 +45,107 @@ Chat.create()
   .fork()  // Branch for regeneration
 ```
 
-## Modules (28 total)
+## Modules (29 total)
 
 | Category | Modules |
 |----------|---------|
 | Data & Forms | Form, Table, List, Tree |
-| Network | Http, Socket, Auth, Stream |
+| Network | Http, Socket, Auth, Stream, **Uploader** |
 | Graphics | Svg, Canvas, Graph, Scale, Axis, Motion |
 | Platform | Router, Storage, Events, Clipboard, Notify, Geo, Media, DB, Worker, WorkerPool |
 | AI & Language | Speech, Chat, Embed, Diff |
 | Utilities | Time |
+
+## File Uploads
+
+Large file uploads with chunking, progress tracking, and driver-agnostic architecture. Works with [stellify/file-uploads](https://github.com/stellisoft/file-uploads) Laravel package.
+
+```javascript
+import { Uploader } from 'stellify-framework'
+
+const uploader = Uploader.create({
+  endpoints: {
+    initiate: '/uploads/initiate',
+    signPart: '/uploads/sign-part',
+    storePart: '/uploads/store-part',
+    complete: '/uploads/complete',
+    abort: '/uploads/abort',
+  },
+})
+
+// Progress tracking
+uploader.on('progress', ({ loaded, total, percent }) => {
+  console.log(`${percent}% complete`)
+})
+
+// Completion handler
+uploader.on('complete', (result) => {
+  // result.path, result.size, result.mime, result.disk
+  saveAttachment(result)
+})
+
+// Error handling
+uploader.on('error', (err) => {
+  if (err.code === 'NETWORK') { /* retry logic */ }
+  else if (err.code === 'VALIDATION') { /* show message */ }
+})
+
+// Upload a file
+await uploader.upload(file)
+
+// Abort mid-upload
+uploader.abort()
+```
+
+### Configuration
+
+```javascript
+Uploader.create({
+  endpoints: { /* required */ },
+  chunkSize: 5 * 1024 * 1024,  // 5 MB default
+  concurrency: 4,              // parts in flight
+  retries: 3,                  // retry count per part
+  retryBackoffMs: 1000,        // initial backoff
+  headers: {                   // custom headers
+    'X-CSRF-TOKEN': token,
+  },
+  credentials: 'same-origin',  // fetch credentials mode
+})
+```
+
+### Events
+
+| Event | Payload | Description |
+|-------|---------|-------------|
+| `start` | `UploadHandle` | After initiate, before parts upload |
+| `progress` | `{ loaded, total, percent }` | Byte-level progress |
+| `part-complete` | `{ partNumber, size, total, completed }` | After each part |
+| `complete` | `UploadResult` | Upload finished successfully |
+| `abort` | - | Upload was aborted |
+| `error` | `UploadError` | Unrecoverable error |
+
+### Error Codes
+
+- `NETWORK` - Network error during request
+- `SIGNING_FAILED` - Failed to get signed URL
+- `PART_UPLOAD_FAILED` - Part upload failed after retries
+- `COMPLETE_FAILED` - Failed to complete upload
+- `VALIDATION` - Server rejected the request (4xx)
+- `ABORTED` - Upload was aborted by user
+- `UNKNOWN` - Unexpected error
+
+### CSRF Tokens
+
+CSRF tokens are auto-detected from `<meta name="csrf-token">` if present. Tokens are sent to app endpoints but NOT to signed URLs (direct-to-storage uploads).
+
+### Server Setup
+
+See [stellify/file-uploads](https://github.com/stellisoft/file-uploads) for Laravel server-side setup. The Uploader works with both:
+
+- **Chunk-through-app driver** - Uploads go through your Laravel app (any disk)
+- **S3 multipart driver** - Direct-to-S3 uploads via pre-signed URLs
+
+The client automatically detects which strategy to use per-part based on server response.
 
 ## Vue Composables
 

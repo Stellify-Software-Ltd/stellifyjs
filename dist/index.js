@@ -1,5 +1,6 @@
 // Data & Forms
 export { Form } from './form';
+export { Uploader, UploadError } from './uploads';
 export { Table } from './table';
 export { Collection } from './collection';
 export { Tree } from './tree';

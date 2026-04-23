@@ -12,6 +12,7 @@
   "exports": {
     ".": "./dist/index.js",
     "./form": "./dist/form/index.js",
+    "./uploads": "./dist/uploads/index.js",
     "./vue": "./dist/adapters/vue/index.js"
   },
   "keywords": [

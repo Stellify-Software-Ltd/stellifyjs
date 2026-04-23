@@ -29,6 +29,6 @@ export declare function useTable(initialRows?: Row[]): {
     getCurrentPage: () => number;
     getPageSize: () => number | null;
     getSortKey: () => string | null;
-    getSortDirection: () => "asc" | "desc";
+    getSortDirection: () => "desc" | "asc";
 };
 export {};

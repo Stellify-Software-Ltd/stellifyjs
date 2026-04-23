@@ -56,6 +56,7 @@ The modules are the product. The adapters are plumbing.
 | Socket | WebSocket | `create()`, `connect()`, `disconnect()`, `send()`, `on()`, `off()` |
 | Auth | Authentication | `create()`, `login()`, `logout()`, `getUser()`, `getToken()`, `isAuthenticated()` |
 | Stream | SSE/streaming responses | `create()`, `post()`, `onChunk()`, `onComplete()`, `abort()`, `getBuffer()` |
+| Uploader | Large file uploads | `create()`, `upload()`, `abort()`, `on()`, `off()`, `getProgress()`, `isUploading()` |
 
 ### Graphics & Visualization
 | Module | Purpose | Key Methods |

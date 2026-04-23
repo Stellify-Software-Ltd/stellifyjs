@@ -33,7 +33,7 @@ export declare function useTable(initialRows?: Row[]): {
         currentPage: number;
         pageSize: number | null;
         sortKey: string | null;
-        sortDirection: "asc" | "desc";
+        sortDirection: "desc" | "asc";
     };
 };
 export {};
