@@ -2,7 +2,7 @@
 export { Form } from './form';
 export { Uploader, UploadError } from './uploads';
 export { Table } from './table';
-export { Collection } from './collection';
+export { Collection, collect } from './collection';
 export { Tree } from './tree';
 // Network
 export { Http, HttpError } from './http';

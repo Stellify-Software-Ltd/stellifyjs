@@ -5,15 +5,36 @@
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "sideEffects": false,
   "scripts": {
     "build": "tsc",
     "test": "vitest"
   },
   "exports": {
-    ".": "./dist/index.js",
-    "./form": "./dist/form/index.js",
-    "./uploads": "./dist/uploads/index.js",
-    "./vue": "./dist/adapters/vue/index.js"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./collection": {
+      "types": "./dist/collection/index.d.ts",
+      "default": "./dist/collection/index.js"
+    },
+    "./collection/*": {
+      "types": "./dist/collection/*.d.ts",
+      "default": "./dist/collection/*.js"
+    },
+    "./form": {
+      "types": "./dist/form/index.d.ts",
+      "default": "./dist/form/index.js"
+    },
+    "./uploads": {
+      "types": "./dist/uploads/index.d.ts",
+      "default": "./dist/uploads/index.js"
+    },
+    "./vue": {
+      "types": "./dist/adapters/vue/index.d.ts",
+      "default": "./dist/adapters/vue/index.js"
+    }
   },
   "keywords": [
     "framework",

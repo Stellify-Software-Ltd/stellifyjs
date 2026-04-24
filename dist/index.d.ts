@@ -2,7 +2,7 @@ export { Form } from './form';
 export { Uploader, UploadError } from './uploads';
 export type { UploaderOptions, UploadEndpoints, UploadHandle, UploadResult, PartReceipt, ProgressEvent, PartCompleteEvent, UploadErrorCode, } from './uploads';
 export { Table } from './table';
-export { Collection } from './collection';
+export { Collection, collect } from './collection';
 export { Tree } from './tree';
 export { Http, HttpError } from './http';
 export { Socket } from './socket';

@@ -7,10 +7,11 @@ A frontend framework built for AI code generation, not just human developers.
 Current frontend libraries fail AI because they have too many ways to do the same thing, massive API surfaces, and undocumented conventions. When AI generates code against existing libraries, it hallucinates methods and produces inconsistent output.
 
 **Stellify provides:**
-- Constrained APIs (5-7 methods per module max)
+- Consistent, chainable APIs with predictable patterns
 - One obvious way to do each task
-- Laravel-style chainable, readable patterns
+- Laravel-style readable method chaining
 - Framework-agnostic core with React/Vue adapters
+- Tree-shakeable architecture for minimal bundle sizes
 
 ## Installation
 
@@ -187,10 +188,28 @@ import { useForm } from 'stellify-framework/react'
 
 ## Design Principles
 
-1. **Rule of Seven** - Max 7 primary methods per module
+1. **Chainable APIs** - Fluent method chaining for readable code
 2. **Verb-noun naming** - `addNode()`, `setData()`, `getErrors()`
-3. **Chainable returns** - Methods return `this`
+3. **Immutable by default** - Methods return new instances, originals unchanged
 4. **Computation, not presentation** - Calculate values, don't dictate styling
+5. **Tree-shakeable** - Atomic internals enable dead-code elimination
+
+## Tree-Shaking & Bundle Optimization
+
+StellifyJS is designed for optimal bundle sizes. Each module is built from atomic pure functions that bundlers can tree-shake effectively.
+
+```javascript
+// Full chainable API
+import { collect } from 'stellify-framework'
+const names = collect(users).where('active', true).pluck('name').all()
+
+// Or import specific atomics for maximum tree-shaking
+import { where, pluck } from 'stellify-framework/collection'
+const active = where(users, 'active', true)
+const names = pluck(active, 'name')
+```
+
+The Stellify platform generates per-project bundles at publish time, including only the functions your project actually uses.
 
 ## Documentation
 
