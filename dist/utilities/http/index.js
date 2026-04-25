@@ -1,0 +1,223 @@
+export class Http {
+    baseUrl;
+    defaultHeaders;
+    defaultTimeout;
+    constructor(baseUrl = '', options = {}) {
+        this.baseUrl = baseUrl;
+        this.defaultHeaders = options.headers || {};
+        this.defaultTimeout = options.timeout || 30000;
+    }
+    static create(baseUrl = '', options = {}) {
+        return new Http(baseUrl, options);
+    }
+    // Static convenience methods using a default instance
+    static defaultInstance = new Http();
+    static get(path, options = {}) {
+        return Http.defaultInstance.get(path, options);
+    }
+    static post(path, data, options = {}) {
+        return Http.defaultInstance.post(path, data, options);
+    }
+    static put(path, data, options = {}) {
+        return Http.defaultInstance.put(path, data, options);
+    }
+    static patch(path, data, options = {}) {
+        return Http.defaultInstance.patch(path, data, options);
+    }
+    static delete(path, options = {}) {
+        return Http.defaultInstance.delete(path, options);
+    }
+    getOrigin() {
+        // Handle iframe contexts where window.location.origin might be 'null' or unavailable
+        try {
+            const origin = window.location.origin;
+            if (origin && origin !== 'null') {
+                return origin;
+            }
+            // Try parent window if we're in an iframe
+            if (window.parent && window.parent !== window) {
+                const parentOrigin = window.parent.location.origin;
+                if (parentOrigin && parentOrigin !== 'null') {
+                    return parentOrigin;
+                }
+            }
+        }
+        catch {
+            // Cross-origin iframe - can't access parent
+        }
+        // Fallback: construct from protocol + host
+        return `${window.location.protocol}//${window.location.host}`;
+    }
+    buildUrl(path, params) {
+        const origin = this.getOrigin();
+        // If baseUrl is a relative path, prepend the origin
+        let base = this.baseUrl;
+        if (base && !base.startsWith('http://') && !base.startsWith('https://')) {
+            base = origin + base;
+        }
+        const url = new URL(path || '', base || origin);
+        if (params) {
+            for (const [key, value] of Object.entries(params)) {
+                url.searchParams.set(key, value);
+            }
+        }
+        return url.toString();
+    }
+    async request(path, options) {
+        const url = this.buildUrl(path, options.params);
+        const headers = {
+            ...this.defaultHeaders,
+            ...options.headers
+        };
+        if (options.body && typeof options.body === 'object') {
+            headers['Content-Type'] = 'application/json';
+        }
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), options.timeout || this.defaultTimeout);
+        try {
+            const response = await fetch(url, {
+                method: options.method,
+                headers,
+                body: options.body ? JSON.stringify(options.body) : undefined,
+                signal: controller.signal
+            });
+            clearTimeout(timeout);
+            if (!response.ok) {
+                throw new HttpError(response.status, response.statusText, await response.text());
+            }
+            const contentType = response.headers.get('content-type');
+            if (contentType?.includes('application/json')) {
+                return response.json();
+            }
+            return response.text();
+        }
+        catch (error) {
+            clearTimeout(timeout);
+            if (error instanceof HttpError) {
+                throw error;
+            }
+            if (error instanceof Error && error.name === 'AbortError') {
+                throw new HttpError(408, 'Request Timeout', 'Request timed out');
+            }
+            throw error;
+        }
+    }
+    async get(path, options = {}) {
+        return this.request(path, { ...options, method: 'GET' });
+    }
+    async post(path, data, options = {}) {
+        return this.request(path, { ...options, method: 'POST', body: data });
+    }
+    async put(path, data, options = {}) {
+        return this.request(path, { ...options, method: 'PUT', body: data });
+    }
+    async patch(path, data, options = {}) {
+        return this.request(path, { ...options, method: 'PATCH', body: data });
+    }
+    async delete(path, options = {}) {
+        return this.request(path, { ...options, method: 'DELETE' });
+    }
+    withHeaders(headers) {
+        return new Http(this.baseUrl, {
+            headers: { ...this.defaultHeaders, ...headers },
+            timeout: this.defaultTimeout
+        });
+    }
+    withToken(token) {
+        return this.withHeaders({ Authorization: `Bearer ${token}` });
+    }
+    withTimeout(ms) {
+        return new Http(this.baseUrl, {
+            headers: this.defaultHeaders,
+            timeout: ms
+        });
+    }
+    /**
+     * Fetch paginated data and return just the items array.
+     * Automatically extracts .data from Laravel-style paginated responses.
+     *
+     * @example
+     * // Instead of: const response = await Http.get('/api/notes'); notes.value = response.data;
+     * // Use: notes.value = await Http.items('/api/notes');
+     */
+    static async items(path, options = {}) {
+        const response = await Http.defaultInstance.get(path, options);
+        return response.data ?? [];
+    }
+    /**
+     * Instance method for fetching paginated items
+     */
+    async items(path, options = {}) {
+        const response = await this.get(path, options);
+        return response.data ?? [];
+    }
+    /**
+     * Create a resource and return just the created item.
+     * Automatically extracts .data from Laravel-style responses.
+     *
+     * @example
+     * // Instead of: const response = await Http.post('/api/notes', data); notes.unshift(response.data);
+     * // Use: const note = await Http.store('/api/notes', data); notes.unshift(note);
+     */
+    static async store(path, data, options = {}) {
+        const response = await Http.defaultInstance.post(path, data, options);
+        return response.data;
+    }
+    /**
+     * Instance method for creating a resource
+     */
+    async store(path, data, options = {}) {
+        const response = await this.post(path, data, options);
+        return response.data;
+    }
+    /**
+     * Update a resource and return just the updated item.
+     * Automatically extracts .data from Laravel-style responses.
+     *
+     * @example
+     * // Instead of: const response = await Http.put('/api/notes/1', data); Object.assign(note, response.data);
+     * // Use: const updated = await Http.update('/api/notes/1', data); Object.assign(note, updated);
+     */
+    static async update(path, data, options = {}) {
+        const response = await Http.defaultInstance.put(path, data, options);
+        return response.data;
+    }
+    /**
+     * Instance method for updating a resource
+     */
+    async update(path, data, options = {}) {
+        const response = await this.put(path, data, options);
+        return response.data;
+    }
+    /**
+     * Delete a resource and return the response data (if any).
+     * Automatically extracts .data from Laravel-style responses.
+     *
+     * @example
+     * // Instead of: await Http.delete('/api/notes/1');
+     * // Use: await Http.destroy('/api/notes/1');
+     */
+    static async destroy(path, options = {}) {
+        const response = await Http.defaultInstance.delete(path, options);
+        return response.data ?? null;
+    }
+    /**
+     * Instance method for deleting a resource
+     */
+    async destroy(path, options = {}) {
+        const response = await this.delete(path, options);
+        return response.data ?? null;
+    }
+}
+export class HttpError extends Error {
+    status;
+    statusText;
+    body;
+    constructor(status, statusText, body) {
+        super(`${status} ${statusText}`);
+        this.name = 'HttpError';
+        this.status = status;
+        this.statusText = statusText;
+        this.body = body;
+    }
+}

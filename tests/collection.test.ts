@@ -112,7 +112,7 @@ import {
   keys,
   values,
   toJson,
-} from '../src/collection'
+} from '../src/utilities/collection'
 
 type User = { id: number; name: string; age: number; active?: boolean }
 

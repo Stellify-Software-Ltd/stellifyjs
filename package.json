@@ -15,48 +15,39 @@
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
     },
-    "./collection": {
-      "types": "./dist/collection/index.d.ts",
-      "default": "./dist/collection/index.js"
+    "./utilities": {
+      "types": "./dist/utilities/index.d.ts",
+      "default": "./dist/utilities/index.js"
     },
-    "./collection/*": {
-      "types": "./dist/collection/*.d.ts",
-      "default": "./dist/collection/*.js"
+    "./utilities/*": {
+      "types": "./dist/utilities/*/index.d.ts",
+      "default": "./dist/utilities/*/index.js"
     },
-    "./form": {
-      "types": "./dist/form/index.d.ts",
-      "default": "./dist/form/index.js"
+    "./composables": {
+      "types": "./dist/composables/index.d.ts",
+      "default": "./dist/composables/index.js"
     },
-    "./uploads": {
-      "types": "./dist/uploads/index.d.ts",
-      "default": "./dist/uploads/index.js"
-    },
-    "./vue": {
-      "types": "./dist/adapters/vue/index.d.ts",
-      "default": "./dist/adapters/vue/index.js"
+    "./composables/*": {
+      "types": "./dist/composables/*/index.d.ts",
+      "default": "./dist/composables/*/index.js"
     }
   },
   "keywords": [
     "framework",
     "ai",
-    "frontend"
+    "frontend",
+    "vue"
   ],
   "license": "MIT",
   "peerDependencies": {
-    "react": ">=17.0.0",
     "vue": ">=3.0.0"
   },
   "peerDependenciesMeta": {
-    "react": {
-      "optional": true
-    },
     "vue": {
       "optional": true
     }
   },
   "devDependencies": {
-    "@types/react": "^18.0.0",
-    "react": "^18.0.0",
     "vue": "^3.0.0",
     "typescript": "^5.3.0",
     "vitest": "^1.0.0"

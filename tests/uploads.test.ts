@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { Uploader, UploadError } from '../src/uploads'
+import { Uploader, UploadError } from '../src/utilities/uploads'
 
 // Mock XMLHttpRequest
 class MockXHR {

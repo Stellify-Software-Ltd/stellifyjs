@@ -10,7 +10,7 @@ Current frontend libraries fail AI because they have too many ways to do the sam
 - Consistent, chainable APIs with predictable patterns
 - One obvious way to do each task
 - Laravel-style readable method chaining
-- Framework-agnostic core with React/Vue adapters
+- Vue composables for reactive state management
 - Tree-shakeable architecture for minimal bundle sizes
 
 ## Installation
@@ -22,40 +22,52 @@ npm install stellify-framework
 ## Quick Examples
 
 ```javascript
-import { Form, Stream, Chat, Speech } from 'stellify-framework'
+import { useForm, rules, Stream, useChat } from 'stellify-framework'
 
-// Form with validation
-Form.create({ name: '', email: '' })
-  .validate({ email: v => v?.includes('@') ? null : 'Invalid' })
-  .store('/api/users')
+// Complete form lifecycle with validation
+const { data, errors, submit } = useForm({
+  data: { name: '', email: '' },
+  endpoint: '/api/users',
+  rules: {
+    email: [rules.required(), rules.email()],
+  },
+})
 
 // LLM streaming
 Stream.create('/api/chat')
   .onChunk(text => appendToUI(text))
   .post({ messages: chat.getMessages() })
 
-// Voice input
-Speech.create()
-  .onResult(text => chat.addUser(text))
-  .listen({ continuous: true })
-
-// Conversation management
-Chat.create()
-  .addUser('What is 2+2?')
-  .addAssistant('4')
-  .fork()  // Branch for regeneration
+// Conversation management (Vue composable)
+const chat = useChat()
+chat.addUser('What is 2+2?')
+chat.addAssistant('4')
+const forked = chat.fork()  // Branch for regeneration
 ```
 
-## Modules (29 total)
+## Utilities
+
+Plain TypeScript modules. Import and use directly.
 
 | Category | Modules |
 |----------|---------|
-| Data & Forms | Form, Table, List, Tree |
-| Network | Http, Socket, Auth, Stream, **Uploader** |
+| Data | Collection, Tree |
+| Network | Http, Socket, Stream, Uploader |
 | Graphics | Svg, Canvas, Graph, Scale, Axis, Motion |
-| Platform | Router, Storage, Events, Clipboard, Notify, Geo, Media, DB, Worker, WorkerPool |
-| AI & Language | Speech, Chat, Embed, Diff |
-| Utilities | Time |
+| Platform | Media, DB, Worker, WorkerPool |
+| AI & Language | Embed, Diff |
+
+## Composables
+
+Vue-reactive modules. Use inside `<script setup>` or `setup()`.
+
+| Category | Composables |
+|----------|-------------|
+| Form | useForm |
+| Data fetching | usePagination, useInfiniteScroll, useLiveData, useLazyLoad |
+| State | useQueryState |
+| Auth & Chat | useAuth, useChat |
+| Routing | useRouter |
 
 ## File Uploads
 
@@ -174,16 +186,74 @@ const { search, page } = useQueryState({
 const { data, visible, targetRef } = useLazyLoad(() => Http.get('/api/heavy-data'))
 ```
 
-## Framework Adapters
+## Form & Pagination Composables
+
+### useForm
+
+Complete form lifecycle: data, validation, submission, errors.
 
 ```javascript
-// Vue
-import { useForm, useTable } from 'stellify-framework'
-const form = useForm({ name: '' })
-<input v-model="form.state.data.name" />
+import { useForm, rules } from 'stellify-framework'
 
-// React (coming soon)
-import { useForm } from 'stellify-framework/react'
+const { data, errors, isSubmitting, isValid, submit } = useForm({
+  data: { email: '', password: '' },
+  endpoint: '/api/login',
+  rules: {
+    email: [rules.required(), rules.email()],
+    password: [rules.required(), rules.min(8)],
+  },
+})
+```
+
+Server-side 422 responses from Laravel are automatically unwrapped into the `errors` ref. Nested data uses dot-path rules: `'user.profile.name'`. Array fields use wildcards: `'items.*.price'`.
+
+**Built-in rules:** `required`, `email`, `url`, `min`, `max`, `between`, `pattern`, `in`, `notIn`, `same`, `different`, `integer`, `numeric`, `boolean`, `date`, `custom`
+
+### usePagination
+
+Server-side paginated fetching with Laravel `LengthAwarePaginator` shape.
+
+```typescript
+import { ref, computed } from 'vue'
+import { usePagination } from 'stellify-framework'
+
+const filters = ref({ status: 'active' })
+const sort = ref({ key: 'date', direction: 'desc' })
+
+const params = computed(() => ({
+  ...filters.value,
+  sort: sort.value.key,
+  direction: sort.value.direction,
+}))
+
+const { rows, meta, isLoading, goToPage, nextPage, prevPage } = usePagination({
+  endpoint: '/api/transactions',
+  params,
+})
+```
+
+Sort state, filter inputs, and any other query state are the consumer's concern — passed in via `params`. Any change to `params` resets to page 1 and refetches. URL sync is optional via `syncUrl: true`.
+
+## Auth, Chat & Router Composables
+
+```javascript
+import { useAuth, useChat, useRouter } from 'stellify-framework'
+
+// Authentication with reactive state
+const auth = useAuth({ loginUrl: '/api/login' })
+await auth.login({ email, password })
+// Reactive: auth.user, auth.isAuthenticated, auth.token
+
+// Chat conversation management
+const chat = useChat({ systemPrompt: 'You are helpful.' })
+chat.addUser('Hello!')
+// Reactive: chat.history, chat.messageCount
+
+// Client-side routing
+const router = useRouter()
+router.register('/users/:id', (params) => loadUser(params.id))
+router.navigate('/users/123')
+// Reactive: router.currentPath, router.params
 ```
 
 ## Design Principles
@@ -204,7 +274,7 @@ import { collect } from 'stellify-framework'
 const names = collect(users).where('active', true).pluck('name').all()
 
 // Or import specific atomics for maximum tree-shaking
-import { where, pluck } from 'stellify-framework/collection'
+import { where, pluck } from 'stellify-framework/utilities/collection'
 const active = where(users, 'active', true)
 const names = pluck(active, 'name')
 ```

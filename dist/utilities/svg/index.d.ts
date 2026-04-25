@@ -1,0 +1,36 @@
+type Attributes = Record<string, string | number>;
+export declare class Svg {
+    private element;
+    private root;
+    private current;
+    private width;
+    private height;
+    private constructor();
+    static create(width: number, height: number): Svg;
+    static select(selector: string): Svg;
+    find(selector: string): Svg;
+    attr(name: string, value: string | number): Svg;
+    attrs(attributes: Attributes): Svg;
+    getAttr(name: string): string | null;
+    addClass(className: string): Svg;
+    removeClass(className: string): Svg;
+    text(content: string): Svg;
+    rect(x: number, y: number, width: number, height: number, attrs?: Attributes): Svg;
+    circle(cx: number, cy: number, r: number, attrs?: Attributes): Svg;
+    ellipse(cx: number, cy: number, rx: number, ry: number, attrs?: Attributes): Svg;
+    line(x1: number, y1: number, x2: number, y2: number, attrs?: Attributes): Svg;
+    polyline(points: [number, number][], attrs?: Attributes): Svg;
+    polygon(points: [number, number][], attrs?: Attributes): Svg;
+    path(d: string, attrs?: Attributes): Svg;
+    textElement(x: number, y: number, content: string, attrs?: Attributes): Svg;
+    group(attrs?: Attributes): Svg;
+    private appendElement;
+    clear(): Svg;
+    remove(): void;
+    toString(): string;
+    private elementToString;
+    toElement(): SVGElement | null;
+    getWidth(): number;
+    getHeight(): number;
+}
+export {};
