@@ -29,17 +29,6 @@ describe('Framework API Manifest', () => {
       // Missing version
       expect(
         validate({
-          generatedAt: '2026-04-27T12:00:00.000Z',
-          composables: {},
-          utilities: {},
-          rules: [],
-        })
-      ).toBe(false)
-
-      // Missing generatedAt
-      expect(
-        validate({
-          version: '0.2.2',
           composables: {},
           utilities: {},
           rules: [],
@@ -50,7 +39,6 @@ describe('Framework API Manifest', () => {
       expect(
         validate({
           version: '0.2.2',
-          generatedAt: '2026-04-27T12:00:00.000Z',
           utilities: {},
           rules: [],
         })
@@ -63,8 +51,7 @@ describe('Framework API Manifest', () => {
       expect(
         validate({
           version: 'invalid',
-          generatedAt: '2026-04-27T12:00:00.000Z',
-          composables: {},
+                    composables: {},
           utilities: {},
           rules: [],
         })
@@ -77,8 +64,7 @@ describe('Framework API Manifest', () => {
       expect(
         validate({
           version: '1.0.0',
-          generatedAt: '2026-04-27T12:00:00.000Z',
-          composables: {},
+                    composables: {},
           utilities: {},
           rules: [],
         })
@@ -87,8 +73,7 @@ describe('Framework API Manifest', () => {
       expect(
         validate({
           version: '0.2.2-beta.1',
-          generatedAt: '2026-04-27T12:00:00.000Z',
-          composables: {},
+                    composables: {},
           utilities: {},
           rules: [],
         })
@@ -102,8 +87,7 @@ describe('Framework API Manifest', () => {
       expect(
         validate({
           version: '0.2.2',
-          generatedAt: '2026-04-27T12:00:00.000Z',
-          composables: {
+                    composables: {
             useForm: {
               summary: 'Form handling composable.',
               options: [
@@ -125,8 +109,7 @@ describe('Framework API Manifest', () => {
       expect(
         validate({
           version: '0.2.2',
-          generatedAt: '2026-04-27T12:00:00.000Z',
-          composables: {
+                    composables: {
             useForm: {
               options: [],
               returns: [],
@@ -145,8 +128,7 @@ describe('Framework API Manifest', () => {
       expect(
         validate({
           version: '0.2.2',
-          generatedAt: '2026-04-27T12:00:00.000Z',
-          composables: {},
+                    composables: {},
           utilities: {
             Http: {
               summary: 'HTTP client.',
@@ -166,8 +148,7 @@ describe('Framework API Manifest', () => {
       expect(
         validate({
           version: '0.2.2',
-          generatedAt: '2026-04-27T12:00:00.000Z',
-          composables: {},
+                    composables: {},
           utilities: {
             Http: {
               summary: 'HTTP client.',
@@ -185,8 +166,7 @@ describe('Framework API Manifest', () => {
       expect(
         validate({
           version: '0.2.2',
-          generatedAt: '2026-04-27T12:00:00.000Z',
-          composables: {},
+                    composables: {},
           utilities: {},
           rules: [
             {
@@ -206,8 +186,7 @@ describe('Framework API Manifest', () => {
       expect(
         validate({
           version: '0.2.2',
-          generatedAt: '2026-04-27T12:00:00.000Z',
-          composables: {},
+                    composables: {},
           utilities: {},
           rules: [
             {
@@ -222,7 +201,6 @@ describe('Framework API Manifest', () => {
   describe('Generated Manifest', () => {
     let manifest: {
       version: string
-      generatedAt: string
       composables: Record<string, unknown>
       utilities: Record<string, unknown>
       rules: unknown[]
@@ -296,11 +274,6 @@ describe('Framework API Manifest', () => {
       expect(manifest.version).toBe(pkg.version)
     })
 
-    it('should have valid ISO 8601 timestamp', () => {
-      expect(new Date(manifest.generatedAt).toISOString()).toBe(
-        manifest.generatedAt
-      )
-    })
   })
 
   describe('Composable Detection', () => {

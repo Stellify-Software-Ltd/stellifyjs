@@ -57,7 +57,6 @@ interface RuleFactory {
 
 interface Manifest {
   version: string
-  generatedAt: string
   composables: Record<string, ComposableEntry>
   utilities: Record<string, UtilityEntry>
   rules: RuleFactory[]
@@ -447,7 +446,6 @@ function generateManifest(): Manifest {
 
   const manifest: Manifest = {
     version: getPackageVersion(),
-    generatedAt: new Date().toISOString(),
     composables: {},
     utilities: {},
     rules: [],
