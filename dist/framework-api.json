@@ -1,6 +1,6 @@
 {
-  "version": "0.2.2",
-  "generatedAt": "2026-04-27T16:45:34.376Z",
+  "version": "0.2.3",
+  "generatedAt": "2026-04-27T22:08:41.384Z",
   "composables": {
     "useForm": {
       "summary": "Vue composable for complete form lifecycle.",
