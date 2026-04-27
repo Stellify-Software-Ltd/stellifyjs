@@ -1,0 +1,2534 @@
+{
+  "version": "0.2.2",
+  "generatedAt": "2026-04-27T16:45:34.376Z",
+  "composables": {
+    "useForm": {
+      "summary": "Vue composable for complete form lifecycle.",
+      "options": [
+        {
+          "name": "data",
+          "type": "T",
+          "required": true,
+          "description": "Initial form data (required)"
+        },
+        {
+          "name": "rules",
+          "type": "Record<string, Rule<T>[]> | undefined",
+          "required": false,
+          "description": "Validation rules by dot-path\nSupports wildcards for arrays: 'items.*.name'"
+        },
+        {
+          "name": "endpoint",
+          "type": "string | undefined",
+          "required": false,
+          "description": "Submission endpoint URL"
+        },
+        {
+          "name": "method",
+          "type": "\"POST\" | \"PUT\" | \"PATCH\" | \"DELETE\" | undefined",
+          "required": false,
+          "description": "HTTP method for submission (default: POST)"
+        },
+        {
+          "name": "transform",
+          "type": "((data: T) => unknown) | undefined",
+          "required": false,
+          "description": "Transform data before submission"
+        }
+      ],
+      "returns": [
+        {
+          "name": "data",
+          "type": "Ref<T, T>",
+          "description": "Reactive form data"
+        },
+        {
+          "name": "errors",
+          "type": "Ref<Record<string, string[]>, Record<string, string[]>>",
+          "description": "Per-path error arrays (dot-notation keys)"
+        },
+        {
+          "name": "isDirty",
+          "type": "ComputedRef<boolean>",
+          "description": "True if data differs from initial snapshot"
+        },
+        {
+          "name": "isValid",
+          "type": "ComputedRef<boolean>",
+          "description": "True if no errors and all rules pass"
+        },
+        {
+          "name": "isSubmitting",
+          "type": "Ref<boolean, boolean>",
+          "description": "True while submission is in progress"
+        },
+        {
+          "name": "hasErrors",
+          "type": "ComputedRef<boolean>",
+          "description": "True if any errors exist"
+        },
+        {
+          "name": "submit",
+          "type": "() => Promise<SubmitResult<R>>",
+          "description": "Submit the form"
+        },
+        {
+          "name": "reset",
+          "type": "() => void",
+          "description": "Reset form to initial state"
+        },
+        {
+          "name": "validate",
+          "type": "() => boolean",
+          "description": "Run client-side validation"
+        },
+        {
+          "name": "setError",
+          "type": "(path: string, message: string) => void",
+          "description": "Set an error for a path"
+        },
+        {
+          "name": "clearErrors",
+          "type": "(path?: string | undefined) => void",
+          "description": "Clear errors (all or for a specific path)"
+        }
+      ]
+    },
+    "usePagination": {
+      "summary": "Vue composable for server-side paginated data fetching.",
+      "options": [
+        {
+          "name": "endpoint",
+          "type": "string",
+          "required": true,
+          "description": "API endpoint to fetch paginated data from (required)"
+        },
+        {
+          "name": "perPage",
+          "type": "number | undefined",
+          "required": false,
+          "description": "Number of items per page (default: 25)"
+        },
+        {
+          "name": "params",
+          "type": "Ref<Record<string, unknown>, Record<string, unknown>> | ComputedRef<Record<string, unknown>> | undefined",
+          "required": false,
+          "description": "Reactive query params to include in requests.\nAny change triggers a refetch and resets to page 1."
+        },
+        {
+          "name": "syncUrl",
+          "type": "boolean | undefined",
+          "required": false,
+          "description": "Sync pagination state with URL query params (default: false)"
+        }
+      ],
+      "returns": [
+        {
+          "name": "rows",
+          "type": "Ref<T[], T[]>",
+          "description": "Current page of data"
+        },
+        {
+          "name": "meta",
+          "type": "Ref<PaginationMeta | null, PaginationMeta | null>",
+          "description": "Pagination metadata (null before first fetch)"
+        },
+        {
+          "name": "isLoading",
+          "type": "Ref<boolean, boolean>",
+          "description": "Whether a request is in flight"
+        },
+        {
+          "name": "error",
+          "type": "Ref<Error | null, Error | null>",
+          "description": "Error from last request (null on success)"
+        },
+        {
+          "name": "goToPage",
+          "type": "(page: number) => void",
+          "description": "Navigate to a specific page"
+        },
+        {
+          "name": "nextPage",
+          "type": "() => void",
+          "description": "Navigate to next page"
+        },
+        {
+          "name": "prevPage",
+          "type": "() => void",
+          "description": "Navigate to previous page"
+        },
+        {
+          "name": "firstPage",
+          "type": "() => void",
+          "description": "Navigate to first page"
+        },
+        {
+          "name": "lastPage",
+          "type": "() => void",
+          "description": "Navigate to last page"
+        },
+        {
+          "name": "refresh",
+          "type": "() => Promise<void>",
+          "description": "Manually refresh current page"
+        }
+      ]
+    },
+    "useInfiniteScroll": {
+      "summary": "Infinite scroll composable for Vue 3\n\nAutomatically loads more data as the user scrolls, using IntersectionObserver\nfor performance.",
+      "options": [
+        {
+          "name": "perPage",
+          "type": "number | undefined",
+          "required": false,
+          "description": "Number of items per page (default: 15)"
+        },
+        {
+          "name": "scrollElement",
+          "type": "Ref<HTMLElement | null, HTMLElement | null> | (() => HTMLElement | null) | undefined",
+          "required": false,
+          "description": "Element to observe for scroll position.\nCan be a ref, a function returning an element, or undefined for window."
+        },
+        {
+          "name": "threshold",
+          "type": "number | undefined",
+          "required": false,
+          "description": "Distance from bottom (in px) to trigger loading (default: 200)"
+        },
+        {
+          "name": "immediate",
+          "type": "boolean | undefined",
+          "required": false,
+          "description": "Start loading automatically on mount (default: true)"
+        },
+        {
+          "name": "cursor",
+          "type": "boolean | undefined",
+          "required": false,
+          "description": "Use cursor-based pagination instead of page numbers"
+        },
+        {
+          "name": "params",
+          "type": "Record<string, string | number | boolean> | undefined",
+          "required": false,
+          "description": "Custom query params to include with each request"
+        },
+        {
+          "name": "direction",
+          "type": "\"down\" | \"up\" | undefined",
+          "required": false,
+          "description": "Direction to load more items: 'down' appends, 'up' prepends (default: 'down')"
+        },
+        {
+          "name": "transform",
+          "type": "((item: unknown) => T) | undefined",
+          "required": false,
+          "description": "Transform each item after fetching"
+        },
+        {
+          "name": "keyField",
+          "type": "keyof T | undefined",
+          "required": false,
+          "description": "Unique key field for deduplication (default: 'id')"
+        },
+        {
+          "name": "http",
+          "type": "typeof Http | undefined",
+          "required": false,
+          "description": "Custom HTTP instance to use"
+        }
+      ],
+      "returns": [
+        {
+          "name": "items",
+          "type": "Ref<Collection<T>, Collection<T>>",
+          "description": "All loaded items as a reactive Collection"
+        },
+        {
+          "name": "loading",
+          "type": "Ref<boolean, boolean>",
+          "description": "Whether currently loading"
+        },
+        {
+          "name": "hasMore",
+          "type": "Ref<boolean, boolean>",
+          "description": "Whether there are more items to load"
+        },
+        {
+          "name": "error",
+          "type": "Ref<Error | null, Error | null>",
+          "description": "Any error that occurred"
+        },
+        {
+          "name": "page",
+          "type": "Ref<string | number, string | number>",
+          "description": "Current page number (or cursor)"
+        },
+        {
+          "name": "total",
+          "type": "Ref<number | null, number | null>",
+          "description": "Total number of items (if known)"
+        },
+        {
+          "name": "loadMore",
+          "type": "() => Promise<void>",
+          "description": "Manually load more items"
+        },
+        {
+          "name": "reset",
+          "type": "() => Promise<void>",
+          "description": "Reset and reload from the beginning"
+        },
+        {
+          "name": "refresh",
+          "type": "() => Promise<void>",
+          "description": "Reload current data without resetting"
+        },
+        {
+          "name": "sentinelRef",
+          "type": "Ref<HTMLElement | null, HTMLElement | null>",
+          "description": "Ref to attach to the sentinel element for intersection observation"
+        }
+      ]
+    },
+    "useLiveData": {
+      "summary": "Live data composable for Vue 3\n\nFetches data via HTTP and keeps it synchronized via WebSocket.",
+      "options": [
+        {
+          "name": "channel",
+          "type": "string | undefined",
+          "required": false,
+          "description": "WebSocket channel to subscribe to"
+        },
+        {
+          "name": "event",
+          "type": "string | undefined",
+          "required": false,
+          "description": "Specific event name to listen for"
+        },
+        {
+          "name": "model",
+          "type": "string | ModelConfig | undefined",
+          "required": false,
+          "description": "Model configuration for automatic CRUD event handling"
+        },
+        {
+          "name": "merge",
+          "type": "MergeStrategy<T> | undefined",
+          "required": false,
+          "description": "How to merge incoming events with current data"
+        },
+        {
+          "name": "keyField",
+          "type": "keyof T | undefined",
+          "required": false,
+          "description": "Key field for upsert/delete operations (default: 'id')"
+        },
+        {
+          "name": "transform",
+          "type": "((item: unknown) => T) | undefined",
+          "required": false,
+          "description": "Transform data after fetching or receiving events"
+        },
+        {
+          "name": "immediate",
+          "type": "boolean | undefined",
+          "required": false,
+          "description": "Whether to fetch data immediately on mount (default: true)"
+        },
+        {
+          "name": "socketUrl",
+          "type": "string | undefined",
+          "required": false,
+          "description": "WebSocket URL (default: auto-detect from window.location)"
+        },
+        {
+          "name": "http",
+          "type": "typeof Http | undefined",
+          "required": false,
+          "description": "Custom HTTP instance"
+        },
+        {
+          "name": "params",
+          "type": "Record<string, string | number | boolean> | undefined",
+          "required": false,
+          "description": "Custom params for initial HTTP request"
+        },
+        {
+          "name": "asCollection",
+          "type": "boolean | undefined",
+          "required": false,
+          "description": "Return data as Collection instead of array (default: true)"
+        }
+      ],
+      "returns": [
+        {
+          "name": "data",
+          "type": "Ref<Collection<T> | T[], Collection<T> | T[]>",
+          "description": "The reactive data (Collection or array based on options)"
+        },
+        {
+          "name": "loading",
+          "type": "Ref<boolean, boolean>",
+          "description": "Whether initial load is in progress"
+        },
+        {
+          "name": "error",
+          "type": "Ref<Error | null, Error | null>",
+          "description": "Any error that occurred"
+        },
+        {
+          "name": "connected",
+          "type": "Ref<boolean, boolean>",
+          "description": "Whether WebSocket is connected"
+        },
+        {
+          "name": "refresh",
+          "type": "() => Promise<void>",
+          "description": "Manually refresh data from the server"
+        },
+        {
+          "name": "disconnect",
+          "type": "() => void",
+          "description": "Manually disconnect WebSocket"
+        },
+        {
+          "name": "reconnect",
+          "type": "() => void",
+          "description": "Manually reconnect WebSocket"
+        },
+        {
+          "name": "push",
+          "type": "(item: T) => void",
+          "description": "Push an item locally (without server)"
+        },
+        {
+          "name": "remove",
+          "type": "(key: unknown) => void",
+          "description": "Remove an item locally by key"
+        },
+        {
+          "name": "update",
+          "type": "(key: unknown, updates: Partial<T>) => void",
+          "description": "Update an item locally"
+        }
+      ]
+    },
+    "useQueryState": {
+      "summary": "Query state composable for Vue 3\n\nProvides two-way binding between reactive state and URL query parameters.",
+      "options": [],
+      "returns": [
+        {
+          "name": "getAll",
+          "type": "() => { [K in keyof S]: ExtractValueType<S[K]>; }",
+          "description": "Get all current values as an object"
+        },
+        {
+          "name": "setAll",
+          "type": "(values: Partial<{ [K in keyof S]: ExtractValueType<S[K]>; }>) => void",
+          "description": "Set multiple values at once"
+        },
+        {
+          "name": "reset",
+          "type": "() => void",
+          "description": "Reset all values to defaults"
+        },
+        {
+          "name": "getUrl",
+          "type": "() => string",
+          "description": "Get the current URL with query params"
+        }
+      ]
+    },
+    "useLazyLoad": {
+      "summary": "Lazy load composable for Vue 3\n\nDefers data fetching until an element enters the viewport.",
+      "options": [
+        {
+          "name": "rootMargin",
+          "type": "string | undefined",
+          "required": false,
+          "description": "Root margin for IntersectionObserver (default: '0px')\nUse positive values like '100px' to pre-load before element is visible"
+        },
+        {
+          "name": "threshold",
+          "type": "number | undefined",
+          "required": false,
+          "description": "Threshold for visibility (0-1, default: 0)\n0 = trigger when any part visible, 1 = trigger when fully visible"
+        },
+        {
+          "name": "immediate",
+          "type": "boolean | undefined",
+          "required": false,
+          "description": "Whether to fetch immediately when visible (default: true)\nSet to false to manually trigger with load()"
+        },
+        {
+          "name": "once",
+          "type": "boolean | undefined",
+          "required": false,
+          "description": "Only load once, even if element leaves and re-enters viewport (default: true)"
+        },
+        {
+          "name": "root",
+          "type": "Ref<HTMLElement | null, HTMLElement | null> | (() => HTMLElement | null) | undefined",
+          "required": false,
+          "description": "Custom root element for intersection (default: viewport)"
+        }
+      ],
+      "returns": [
+        {
+          "name": "data",
+          "type": "Ref<T | null, T | null>",
+          "description": "The loaded data"
+        },
+        {
+          "name": "visible",
+          "type": "Ref<boolean, boolean>",
+          "description": "Whether the element is visible in viewport"
+        },
+        {
+          "name": "loading",
+          "type": "Ref<boolean, boolean>",
+          "description": "Whether data is currently loading"
+        },
+        {
+          "name": "loaded",
+          "type": "Ref<boolean, boolean>",
+          "description": "Whether data has been loaded at least once"
+        },
+        {
+          "name": "error",
+          "type": "Ref<Error | null, Error | null>",
+          "description": "Any error that occurred during loading"
+        },
+        {
+          "name": "targetRef",
+          "type": "Ref<HTMLElement | null, HTMLElement | null>",
+          "description": "Ref to attach to the target element"
+        },
+        {
+          "name": "load",
+          "type": "() => Promise<void>",
+          "description": "Manually trigger loading"
+        },
+        {
+          "name": "reset",
+          "type": "() => void",
+          "description": "Reset state and allow re-loading"
+        }
+      ]
+    },
+    "useAuth": {
+      "summary": "Vue composable for authentication state management.",
+      "options": [
+        {
+          "name": "loginUrl",
+          "type": "string | undefined",
+          "required": false
+        },
+        {
+          "name": "logoutUrl",
+          "type": "string | undefined",
+          "required": false
+        },
+        {
+          "name": "userUrl",
+          "type": "string | undefined",
+          "required": false
+        },
+        {
+          "name": "tokenKey",
+          "type": "string | undefined",
+          "required": false
+        },
+        {
+          "name": "storage",
+          "type": "\"local\" | \"session\" | undefined",
+          "required": false
+        }
+      ],
+      "returns": [
+        {
+          "name": "login",
+          "type": "(credentials: Credentials) => Promise<User>"
+        },
+        {
+          "name": "logout",
+          "type": "() => Promise<void>"
+        },
+        {
+          "name": "fetchUser",
+          "type": "() => Promise<User | null>"
+        },
+        {
+          "name": "getUser",
+          "type": "() => User | null"
+        },
+        {
+          "name": "getToken",
+          "type": "() => string | null"
+        },
+        {
+          "name": "setToken",
+          "type": "(token: string) => AuthReturn"
+        },
+        {
+          "name": "setUser",
+          "type": "(user: User) => AuthReturn"
+        },
+        {
+          "name": "refresh",
+          "type": "() => Promise<void>"
+        },
+        {
+          "name": "getAuthHeader",
+          "type": "() => Record<string, string>"
+        },
+        {
+          "name": "user",
+          "type": "Readonly<Ref<User | null, User | null>>"
+        },
+        {
+          "name": "token",
+          "type": "Readonly<Ref<string | null, string | null>>"
+        },
+        {
+          "name": "isAuthenticated",
+          "type": "ComputedRef<boolean>"
+        }
+      ]
+    },
+    "useChat": {
+      "summary": "Vue composable for chat/conversation state management.",
+      "options": [
+        {
+          "name": "systemPrompt",
+          "type": "string | undefined",
+          "required": false
+        },
+        {
+          "name": "maxMessages",
+          "type": "number | undefined",
+          "required": false
+        }
+      ],
+      "returns": [
+        {
+          "name": "addMessage",
+          "type": "(role: Role, content: string, metadata?: Record<string, unknown> | undefined) => ChatReturn"
+        },
+        {
+          "name": "addUser",
+          "type": "(content: string) => ChatReturn"
+        },
+        {
+          "name": "addAssistant",
+          "type": "(content: string) => ChatReturn"
+        },
+        {
+          "name": "addSystem",
+          "type": "(content: string) => ChatReturn"
+        },
+        {
+          "name": "getMessage",
+          "type": "(id: string) => Message | undefined"
+        },
+        {
+          "name": "getHistory",
+          "type": "() => Message[]"
+        },
+        {
+          "name": "getMessages",
+          "type": "() => { role: Role; content: string; }[]"
+        },
+        {
+          "name": "getLastMessage",
+          "type": "() => Message | undefined"
+        },
+        {
+          "name": "getLastUserMessage",
+          "type": "() => Message | undefined"
+        },
+        {
+          "name": "getLastAssistantMessage",
+          "type": "() => Message | undefined"
+        },
+        {
+          "name": "updateMessage",
+          "type": "(id: string, content: string) => ChatReturn"
+        },
+        {
+          "name": "removeMessage",
+          "type": "(id: string) => ChatReturn"
+        },
+        {
+          "name": "clear",
+          "type": "() => ChatReturn"
+        },
+        {
+          "name": "clearAll",
+          "type": "() => ChatReturn"
+        },
+        {
+          "name": "fork",
+          "type": "(fromMessageId?: string | undefined) => ChatReturn"
+        },
+        {
+          "name": "truncate",
+          "type": "(keepCount: number) => ChatReturn"
+        },
+        {
+          "name": "count",
+          "type": "() => number"
+        },
+        {
+          "name": "countTokensEstimate",
+          "type": "() => number"
+        },
+        {
+          "name": "toJSON",
+          "type": "() => string"
+        },
+        {
+          "name": "history",
+          "type": "ComputedRef<Message[]>"
+        },
+        {
+          "name": "messages",
+          "type": "Readonly<ShallowRef<readonly Message[], readonly Message[]>>"
+        },
+        {
+          "name": "messageCount",
+          "type": "ComputedRef<number>"
+        },
+        {
+          "name": "isEmpty",
+          "type": "ComputedRef<boolean>"
+        }
+      ]
+    },
+    "useChatFromHistory": {
+      "summary": "Create a chat from existing message history",
+      "options": [
+        {
+          "name": "systemPrompt",
+          "type": "string | undefined",
+          "required": false
+        },
+        {
+          "name": "maxMessages",
+          "type": "number | undefined",
+          "required": false
+        }
+      ],
+      "returns": [
+        {
+          "name": "addMessage",
+          "type": "(role: Role, content: string, metadata?: Record<string, unknown> | undefined) => ChatReturn"
+        },
+        {
+          "name": "addUser",
+          "type": "(content: string) => ChatReturn"
+        },
+        {
+          "name": "addAssistant",
+          "type": "(content: string) => ChatReturn"
+        },
+        {
+          "name": "addSystem",
+          "type": "(content: string) => ChatReturn"
+        },
+        {
+          "name": "getMessage",
+          "type": "(id: string) => Message | undefined"
+        },
+        {
+          "name": "getHistory",
+          "type": "() => Message[]"
+        },
+        {
+          "name": "getMessages",
+          "type": "() => { role: Role; content: string; }[]"
+        },
+        {
+          "name": "getLastMessage",
+          "type": "() => Message | undefined"
+        },
+        {
+          "name": "getLastUserMessage",
+          "type": "() => Message | undefined"
+        },
+        {
+          "name": "getLastAssistantMessage",
+          "type": "() => Message | undefined"
+        },
+        {
+          "name": "updateMessage",
+          "type": "(id: string, content: string) => ChatReturn"
+        },
+        {
+          "name": "removeMessage",
+          "type": "(id: string) => ChatReturn"
+        },
+        {
+          "name": "clear",
+          "type": "() => ChatReturn"
+        },
+        {
+          "name": "clearAll",
+          "type": "() => ChatReturn"
+        },
+        {
+          "name": "fork",
+          "type": "(fromMessageId?: string | undefined) => ChatReturn"
+        },
+        {
+          "name": "truncate",
+          "type": "(keepCount: number) => ChatReturn"
+        },
+        {
+          "name": "count",
+          "type": "() => number"
+        },
+        {
+          "name": "countTokensEstimate",
+          "type": "() => number"
+        },
+        {
+          "name": "toJSON",
+          "type": "() => string"
+        },
+        {
+          "name": "history",
+          "type": "ComputedRef<Message[]>"
+        },
+        {
+          "name": "messages",
+          "type": "Readonly<ShallowRef<readonly Message[], readonly Message[]>>"
+        },
+        {
+          "name": "messageCount",
+          "type": "ComputedRef<number>"
+        },
+        {
+          "name": "isEmpty",
+          "type": "ComputedRef<boolean>"
+        }
+      ]
+    },
+    "useRouter": {
+      "summary": "Vue composable for client-side routing.",
+      "options": [],
+      "returns": [
+        {
+          "name": "register",
+          "type": "(path: string, handler: RouteHandler) => RouterReturn"
+        },
+        {
+          "name": "navigate",
+          "type": "(path: string, options?: NavigateOptions | undefined) => RouterReturn"
+        },
+        {
+          "name": "push",
+          "type": "(path: string, options?: NavigateOptions | undefined) => RouterReturn"
+        },
+        {
+          "name": "back",
+          "type": "() => RouterReturn"
+        },
+        {
+          "name": "forward",
+          "type": "() => RouterReturn"
+        },
+        {
+          "name": "getParams",
+          "type": "() => Record<string, string>"
+        },
+        {
+          "name": "getQuery",
+          "type": "() => Record<string, string>"
+        },
+        {
+          "name": "getCurrent",
+          "type": "() => string"
+        },
+        {
+          "name": "getState",
+          "type": "() => unknown"
+        },
+        {
+          "name": "onNavigate",
+          "type": "(callback: (path: string, params: Record<string, string>) => void) => RouterReturn"
+        },
+        {
+          "name": "offNavigate",
+          "type": "(callback: (path: string, params: Record<string, string>) => void) => RouterReturn"
+        },
+        {
+          "name": "start",
+          "type": "() => RouterReturn"
+        },
+        {
+          "name": "currentPath",
+          "type": "Readonly<Ref<string, string>>"
+        },
+        {
+          "name": "params",
+          "type": "ComputedRef<Record<string, string>>"
+        },
+        {
+          "name": "query",
+          "type": "ComputedRef<Record<string, string>>"
+        },
+        {
+          "name": "state",
+          "type": "Readonly<Ref<unknown, unknown>>"
+        }
+      ]
+    },
+    "usePresence": {
+      "summary": "Real-time collaborative presence composable\n\nEnables seeing who else is on a page, where their cursor is, and what they're focused on.",
+      "options": [
+        {
+          "name": "channel",
+          "type": "string",
+          "required": true,
+          "description": "Laravel broadcast channel name\nConvention: project-scoped channels like 'customers' or 'project.{id}'"
+        },
+        {
+          "name": "user",
+          "type": "{ [key: string]: unknown; id: string | number; }",
+          "required": true,
+          "description": "Current user's identity - broadcast to other clients\nid is required; name/avatar/colour are common additions"
+        },
+        {
+          "name": "autoJoin",
+          "type": "boolean | undefined",
+          "required": false,
+          "description": "Whether to automatically join on mount (default: true)"
+        },
+        {
+          "name": "throttleMs",
+          "type": "number | undefined",
+          "required": false,
+          "description": "Throttle interval for cursor broadcasts in ms (default: 50)"
+        },
+        {
+          "name": "socketUrl",
+          "type": "string | undefined",
+          "required": false,
+          "description": "WebSocket URL (default: auto-detect from window.location)"
+        }
+      ],
+      "returns": [
+        {
+          "name": "users",
+          "type": "ComputedRef<PresenceUser[]>",
+          "description": "Other users currently present (excluding self)"
+        },
+        {
+          "name": "self",
+          "type": "Ref<PresenceUser | null, PresenceUser | null>",
+          "description": "Current user's own presence record"
+        },
+        {
+          "name": "cursor",
+          "type": "(event: MouseEvent | PointerEvent) => void",
+          "description": "Call from"
+        },
+        {
+          "name": "focus",
+          "type": "(key: string | null) => void",
+          "description": "Broadcast what the user is focused on (row id, field, etc.)\nPass null to clear focus"
+        },
+        {
+          "name": "setMeta",
+          "type": "(meta: Record<string, unknown>) => void",
+          "description": "Broadcast arbitrary metadata\nMeta is shallow-merged, not replaced"
+        },
+        {
+          "name": "isConnected",
+          "type": "Ref<boolean, boolean>",
+          "description": "Whether WebSocket is connected"
+        },
+        {
+          "name": "error",
+          "type": "Ref<Error | null, Error | null>",
+          "description": "Any connection error"
+        },
+        {
+          "name": "join",
+          "type": "() => Promise<void>",
+          "description": "Manually join channel (auto-called on mount unless autoJoin: false)"
+        },
+        {
+          "name": "leave",
+          "type": "() => void",
+          "description": "Manually leave channel (auto-called on unmount)"
+        }
+      ]
+    }
+  },
+  "utilities": {
+    "Collection": {
+      "summary": "Utility class: Collection",
+      "methods": [
+        {
+          "name": "all",
+          "signature": "() => T[]"
+        },
+        {
+          "name": "get",
+          "signature": "(index: number, defaultValue?: T | undefined) => T | undefined"
+        },
+        {
+          "name": "first",
+          "signature": "(predicate?: Predicate<T> | undefined) => T | undefined"
+        },
+        {
+          "name": "firstWhere",
+          "signature": "(key: keyof T, operatorOrValue?: unknown, value?: unknown) => T | undefined"
+        },
+        {
+          "name": "last",
+          "signature": "(predicate?: Predicate<T> | undefined) => T | undefined"
+        },
+        {
+          "name": "before",
+          "signature": "(item: T) => T | undefined"
+        },
+        {
+          "name": "after",
+          "signature": "(item: T) => T | undefined"
+        },
+        {
+          "name": "pluck",
+          "signature": "(key: K) => Collection<T[K]>"
+        },
+        {
+          "name": "only",
+          "signature": "(keys: K[]) => Collection<Pick<T, K>>"
+        },
+        {
+          "name": "except",
+          "signature": "(keys: K[]) => Collection<Omit<T, K>>"
+        },
+        {
+          "name": "random",
+          "signature": "(count?: number | undefined) => Collection<T> | T | undefined"
+        },
+        {
+          "name": "filter",
+          "signature": "(predicate: Predicate<T>) => Collection<T>"
+        },
+        {
+          "name": "where",
+          "signature": "(key: keyof T, operatorOrValue?: unknown, value?: unknown) => Collection<T>"
+        },
+        {
+          "name": "whereIn",
+          "signature": "(key: keyof T, values: unknown[]) => Collection<T>"
+        },
+        {
+          "name": "whereNotIn",
+          "signature": "(key: keyof T, values: unknown[]) => Collection<T>"
+        },
+        {
+          "name": "whereBetween",
+          "signature": "(key: keyof T, range: [number, number]) => Collection<T>"
+        },
+        {
+          "name": "whereNotBetween",
+          "signature": "(key: keyof T, range: [number, number]) => Collection<T>"
+        },
+        {
+          "name": "whereNull",
+          "signature": "(key: keyof T) => Collection<T>"
+        },
+        {
+          "name": "whereNotNull",
+          "signature": "(key: keyof T) => Collection<T>"
+        },
+        {
+          "name": "reject",
+          "signature": "(predicate: Predicate<T>) => Collection<T>"
+        },
+        {
+          "name": "unique",
+          "signature": "(key?: keyof T | undefined) => Collection<T>"
+        },
+        {
+          "name": "duplicates",
+          "signature": "(key?: keyof T | undefined) => Collection<T>"
+        },
+        {
+          "name": "map",
+          "signature": "(mapper: Mapper<T, U>) => Collection<U>"
+        },
+        {
+          "name": "flatMap",
+          "signature": "(mapper: Mapper<T, U[]>) => Collection<U>"
+        },
+        {
+          "name": "mapWithKeys",
+          "signature": "(mapper: KeyMapper<T>) => Map<string | number, unknown>"
+        },
+        {
+          "name": "keyBy",
+          "signature": "(key: keyof T) => Map<unknown, T>"
+        },
+        {
+          "name": "groupBy",
+          "signature": "(key: keyof T) => Map<unknown, Collection<T>>"
+        },
+        {
+          "name": "countBy",
+          "signature": "(key?: keyof T | undefined) => Map<unknown, number>"
+        },
+        {
+          "name": "partition",
+          "signature": "(predicate: Predicate<T>) => [Collection<T>, Collection<T>]"
+        },
+        {
+          "name": "flatten",
+          "signature": "(depth: number) => Collection<unknown>"
+        },
+        {
+          "name": "collapse",
+          "signature": "() => Collection<unknown>"
+        },
+        {
+          "name": "flip",
+          "signature": "() => Map<unknown, number>"
+        },
+        {
+          "name": "sort",
+          "signature": "(comparator?: ((a: T, b: T) => number) | undefined) => Collection<T>"
+        },
+        {
+          "name": "sortBy",
+          "signature": "(key: keyof T) => Collection<T>"
+        },
+        {
+          "name": "sortByDesc",
+          "signature": "(key: keyof T) => Collection<T>"
+        },
+        {
+          "name": "sortDesc",
+          "signature": "() => Collection<T>"
+        },
+        {
+          "name": "reverse",
+          "signature": "() => Collection<T>"
+        },
+        {
+          "name": "shuffle",
+          "signature": "() => Collection<T>"
+        },
+        {
+          "name": "take",
+          "signature": "(count: number) => Collection<T>"
+        },
+        {
+          "name": "takeWhile",
+          "signature": "(predicate: Predicate<T>) => Collection<T>"
+        },
+        {
+          "name": "takeUntil",
+          "signature": "(predicate: Predicate<T>) => Collection<T>"
+        },
+        {
+          "name": "skip",
+          "signature": "(count: number) => Collection<T>"
+        },
+        {
+          "name": "skipWhile",
+          "signature": "(predicate: Predicate<T>) => Collection<T>"
+        },
+        {
+          "name": "skipUntil",
+          "signature": "(predicate: Predicate<T>) => Collection<T>"
+        },
+        {
+          "name": "slice",
+          "signature": "(start?: number | undefined, end?: number | undefined) => Collection<T>"
+        },
+        {
+          "name": "forPage",
+          "signature": "(page: number, perPage: number) => Collection<T>"
+        },
+        {
+          "name": "split",
+          "signature": "(count: number) => Collection<Collection<T>>"
+        },
+        {
+          "name": "chunk",
+          "signature": "(size: number) => Collection<Collection<T>>"
+        },
+        {
+          "name": "sliding",
+          "signature": "(size: number, step: number) => Collection<Collection<T>>"
+        },
+        {
+          "name": "nth",
+          "signature": "(step: number, offset: number) => Collection<T>"
+        },
+        {
+          "name": "push",
+          "signature": "(items: T[]) => Collection<T>"
+        },
+        {
+          "name": "prepend",
+          "signature": "(item: T) => Collection<T>"
+        },
+        {
+          "name": "pop",
+          "signature": "() => { item: T | undefined; collection: Collection<T>; }"
+        },
+        {
+          "name": "shift",
+          "signature": "() => { item: T | undefined; collection: Collection<T>; }"
+        },
+        {
+          "name": "forget",
+          "signature": "(index: number) => Collection<T>"
+        },
+        {
+          "name": "pull",
+          "signature": "(index: number) => { item: T | undefined; collection: Collection<T>; }"
+        },
+        {
+          "name": "put",
+          "signature": "(index: number, value: T) => Collection<T>"
+        },
+        {
+          "name": "toggle",
+          "signature": "(item: T, key?: keyof T | undefined) => Collection<T>"
+        },
+        {
+          "name": "concat",
+          "signature": "(items: (Collection<T> | T[])[]) => Collection<T>"
+        },
+        {
+          "name": "merge",
+          "signature": "(items: Collection<T> | T[]) => Collection<T>"
+        },
+        {
+          "name": "diff",
+          "signature": "(items: Collection<T> | T[]) => Collection<T>"
+        },
+        {
+          "name": "intersect",
+          "signature": "(items: Collection<T> | T[]) => Collection<T>"
+        },
+        {
+          "name": "combine",
+          "signature": "(values: U[]) => Map<T extends string | number ? T : never, U>"
+        },
+        {
+          "name": "zip",
+          "signature": "(items: U[]) => Collection<[T, U]>"
+        },
+        {
+          "name": "pad",
+          "signature": "(size: number, value: T) => Collection<T>"
+        },
+        {
+          "name": "reduce",
+          "signature": "(reducer: Reducer<T, U>, initial: U) => U"
+        },
+        {
+          "name": "sum",
+          "signature": "(key?: keyof T | undefined) => number"
+        },
+        {
+          "name": "avg",
+          "signature": "(key?: keyof T | undefined) => number"
+        },
+        {
+          "name": "average",
+          "signature": "(key?: keyof T | undefined) => number"
+        },
+        {
+          "name": "min",
+          "signature": "(key?: keyof T | undefined) => T | T[keyof T] | undefined"
+        },
+        {
+          "name": "max",
+          "signature": "(key?: keyof T | undefined) => T | T[keyof T] | undefined"
+        },
+        {
+          "name": "median",
+          "signature": "(key?: keyof T | undefined) => number | undefined"
+        },
+        {
+          "name": "mode",
+          "signature": "(key?: keyof T | undefined) => T[] | T[keyof T][] | undefined"
+        },
+        {
+          "name": "contains",
+          "signature": "(keyOrValue: T | Predicate<T> | keyof T, value?: unknown) => boolean"
+        },
+        {
+          "name": "doesntContain",
+          "signature": "(keyOrValue: T | Predicate<T> | keyof T, value?: unknown) => boolean"
+        },
+        {
+          "name": "has",
+          "signature": "(key: number) => boolean"
+        },
+        {
+          "name": "isEmpty",
+          "signature": "() => boolean"
+        },
+        {
+          "name": "isNotEmpty",
+          "signature": "() => boolean"
+        },
+        {
+          "name": "every",
+          "signature": "(predicate: Predicate<T>) => boolean"
+        },
+        {
+          "name": "some",
+          "signature": "(predicate: Predicate<T>) => boolean"
+        },
+        {
+          "name": "each",
+          "signature": "(callback: (item: T, index: number) => false | void) => Collection<T>"
+        },
+        {
+          "name": "tap",
+          "signature": "(callback: (collection: Collection<T>) => void) => Collection<T>"
+        },
+        {
+          "name": "pipe",
+          "signature": "(callback: (collection: Collection<T>) => U) => U"
+        },
+        {
+          "name": "when",
+          "signature": "(condition: boolean | (() => boolean), callback: (collection: Collection<T>) => Collection<U>, fallback?: ((collection: Collection<T>) => Collection<U>) | undefined) => Collection<T> | Collection<U>"
+        },
+        {
+          "name": "unless",
+          "signature": "(condition: boolean | (() => boolean), callback: (collection: Collection<T>) => Collection<U>, fallback?: ((collection: Collection<T>) => Collection<U>) | undefined) => Collection<T> | Collection<U>"
+        },
+        {
+          "name": "whenEmpty",
+          "signature": "(callback: (collection: Collection<T>) => Collection<U>) => Collection<T> | Collection<U>"
+        },
+        {
+          "name": "whenNotEmpty",
+          "signature": "(callback: (collection: Collection<T>) => Collection<U>) => Collection<T> | Collection<U>"
+        },
+        {
+          "name": "search",
+          "signature": "(item: T) => number"
+        },
+        {
+          "name": "join",
+          "signature": "(glue: string, finalGlue?: string | undefined) => string"
+        },
+        {
+          "name": "implode",
+          "signature": "(key: keyof T, glue: string) => string"
+        },
+        {
+          "name": "count",
+          "signature": "() => number"
+        },
+        {
+          "name": "keys",
+          "signature": "() => Collection<number>"
+        },
+        {
+          "name": "values",
+          "signature": "() => Collection<T>"
+        },
+        {
+          "name": "toJson",
+          "signature": "() => string"
+        },
+        {
+          "name": "__@iterator@16",
+          "signature": "() => Iterator<T, any, any>"
+        }
+      ],
+      "staticMethods": [
+        {
+          "name": "collect",
+          "signature": "(items: T[]) => Collection<T>"
+        },
+        {
+          "name": "wrap",
+          "signature": "(value: T | T[]) => Collection<T>"
+        },
+        {
+          "name": "from",
+          "signature": "(items: Iterable<T>) => Collection<T>"
+        },
+        {
+          "name": "range",
+          "signature": "(start: number, end: number, step: number) => Collection<number>"
+        },
+        {
+          "name": "times",
+          "signature": "(count: number, callback: (index: number) => T) => Collection<T>"
+        }
+      ]
+    },
+    "collect": {
+      "summary": "Create a new Collection instance",
+      "methods": [
+        {
+          "name": "collect",
+          "signature": "(items: T[]) => Collection<T>"
+        }
+      ]
+    },
+    "Tree": {
+      "summary": "Utility class: Tree",
+      "methods": [
+        {
+          "name": "setRoot",
+          "signature": "(id: string, data: NodeData) => Tree"
+        },
+        {
+          "name": "addChild",
+          "signature": "(parentId: string, id: string, data: NodeData) => Tree"
+        },
+        {
+          "name": "removeNode",
+          "signature": "(id: string) => Tree"
+        },
+        {
+          "name": "getNode",
+          "signature": "(id: string) => TreeNode | null"
+        },
+        {
+          "name": "getRoot",
+          "signature": "() => TreeNode | null"
+        },
+        {
+          "name": "getChildren",
+          "signature": "(id: string) => TreeNode[]"
+        },
+        {
+          "name": "getParent",
+          "signature": "(id: string) => TreeNode | null"
+        },
+        {
+          "name": "getSiblings",
+          "signature": "(id: string) => TreeNode[]"
+        },
+        {
+          "name": "getAncestors",
+          "signature": "(id: string) => TreeNode[]"
+        },
+        {
+          "name": "getDescendants",
+          "signature": "(id: string) => TreeNode[]"
+        },
+        {
+          "name": "getDepth",
+          "signature": "(id: string) => number"
+        },
+        {
+          "name": "getPath",
+          "signature": "(id: string) => TreeNode[]"
+        },
+        {
+          "name": "traverse",
+          "signature": "(callback: TraverseCallback, order: \"pre\" | \"post\") => Tree"
+        },
+        {
+          "name": "find",
+          "signature": "(predicate: (node: TreeNode) => boolean) => TreeNode | null"
+        },
+        {
+          "name": "findAll",
+          "signature": "(predicate: (node: TreeNode) => boolean) => TreeNode[]"
+        },
+        {
+          "name": "move",
+          "signature": "(id: string, newParentId: string) => Tree"
+        },
+        {
+          "name": "toArray",
+          "signature": "() => TreeNode[]"
+        },
+        {
+          "name": "size",
+          "signature": "() => number"
+        }
+      ],
+      "staticMethods": [
+        {
+          "name": "create",
+          "signature": "() => Tree"
+        }
+      ]
+    },
+    "Uploader": {
+      "summary": "Utility class: Uploader",
+      "methods": [
+        {
+          "name": "on",
+          "signature": "(event: K, callback: EventCallback<UploaderEvents[K]>) => Uploader",
+          "description": "Register an event listener."
+        },
+        {
+          "name": "off",
+          "signature": "(event: K, callback: EventCallback<UploaderEvents[K]>) => Uploader",
+          "description": "Remove an event listener."
+        },
+        {
+          "name": "upload",
+          "signature": "(file: File) => Promise<UploadResult>",
+          "description": "Upload a file.\nResolves when complete, rejects on error or abort."
+        },
+        {
+          "name": "abort",
+          "signature": "() => void",
+          "description": "Abort an in-progress upload.\nSafe to call at any point in the lifecycle."
+        },
+        {
+          "name": "getProgress",
+          "signature": "() => ProgressEvent",
+          "description": "Get the current upload progress."
+        },
+        {
+          "name": "isUploading",
+          "signature": "() => boolean",
+          "description": "Check if an upload is currently in progress."
+        }
+      ],
+      "staticMethods": [
+        {
+          "name": "create",
+          "signature": "(options: UploaderOptions) => Uploader",
+          "description": "Create a new Uploader instance."
+        }
+      ]
+    },
+    "UploadError": {
+      "summary": "Utility class: UploadError",
+      "methods": []
+    },
+    "Http": {
+      "summary": "Utility class: Http",
+      "methods": [
+        {
+          "name": "get",
+          "signature": "(path: string, options: HttpOptions) => Promise<T>"
+        },
+        {
+          "name": "post",
+          "signature": "(path: string, data?: unknown, options: HttpOptions) => Promise<T>"
+        },
+        {
+          "name": "put",
+          "signature": "(path: string, data?: unknown, options: HttpOptions) => Promise<T>"
+        },
+        {
+          "name": "patch",
+          "signature": "(path: string, data?: unknown, options: HttpOptions) => Promise<T>"
+        },
+        {
+          "name": "delete",
+          "signature": "(path: string, options: HttpOptions) => Promise<T>"
+        },
+        {
+          "name": "withHeaders",
+          "signature": "(headers: Record<string, string>) => Http"
+        },
+        {
+          "name": "withToken",
+          "signature": "(token: string) => Http"
+        },
+        {
+          "name": "withTimeout",
+          "signature": "(ms: number) => Http"
+        },
+        {
+          "name": "items",
+          "signature": "(path: string, options: HttpOptions) => Promise<T[]>",
+          "description": "Instance method for fetching paginated items"
+        },
+        {
+          "name": "store",
+          "signature": "(path: string, data?: unknown, options: HttpOptions) => Promise<T>",
+          "description": "Instance method for creating a resource"
+        },
+        {
+          "name": "update",
+          "signature": "(path: string, data?: unknown, options: HttpOptions) => Promise<T>",
+          "description": "Instance method for updating a resource"
+        },
+        {
+          "name": "destroy",
+          "signature": "(path: string, options: HttpOptions) => Promise<T | null>",
+          "description": "Instance method for deleting a resource"
+        }
+      ],
+      "staticMethods": [
+        {
+          "name": "create",
+          "signature": "(baseUrl: string, options: HttpOptions) => Http"
+        },
+        {
+          "name": "get",
+          "signature": "(path: string, options: HttpOptions) => Promise<T>"
+        },
+        {
+          "name": "post",
+          "signature": "(path: string, data?: unknown, options: HttpOptions) => Promise<T>"
+        },
+        {
+          "name": "put",
+          "signature": "(path: string, data?: unknown, options: HttpOptions) => Promise<T>"
+        },
+        {
+          "name": "patch",
+          "signature": "(path: string, data?: unknown, options: HttpOptions) => Promise<T>"
+        },
+        {
+          "name": "delete",
+          "signature": "(path: string, options: HttpOptions) => Promise<T>"
+        },
+        {
+          "name": "items",
+          "signature": "(path: string, options: HttpOptions) => Promise<T[]>",
+          "description": "Fetch paginated data and return just the items array.\nAutomatically extracts .data from Laravel-style paginated responses."
+        },
+        {
+          "name": "store",
+          "signature": "(path: string, data?: unknown, options: HttpOptions) => Promise<T>",
+          "description": "Create a resource and return just the created item.\nAutomatically extracts .data from Laravel-style responses."
+        },
+        {
+          "name": "update",
+          "signature": "(path: string, data?: unknown, options: HttpOptions) => Promise<T>",
+          "description": "Update a resource and return just the updated item.\nAutomatically extracts .data from Laravel-style responses."
+        },
+        {
+          "name": "destroy",
+          "signature": "(path: string, options: HttpOptions) => Promise<T | null>",
+          "description": "Delete a resource and return the response data (if any).\nAutomatically extracts .data from Laravel-style responses."
+        }
+      ]
+    },
+    "HttpError": {
+      "summary": "Utility class: HttpError",
+      "methods": []
+    },
+    "Socket": {
+      "summary": "Utility class: Socket",
+      "methods": [
+        {
+          "name": "connect",
+          "signature": "() => Socket"
+        },
+        {
+          "name": "disconnect",
+          "signature": "() => Socket"
+        },
+        {
+          "name": "send",
+          "signature": "(data: unknown) => Socket"
+        },
+        {
+          "name": "sendEvent",
+          "signature": "(event: string, data?: unknown) => Socket"
+        },
+        {
+          "name": "on",
+          "signature": "(event: string, callback: SocketCallback) => Socket"
+        },
+        {
+          "name": "off",
+          "signature": "(event: string, callback: SocketCallback) => Socket"
+        },
+        {
+          "name": "once",
+          "signature": "(event: string, callback: SocketCallback) => Socket"
+        },
+        {
+          "name": "isConnected",
+          "signature": "() => boolean"
+        },
+        {
+          "name": "getState",
+          "signature": "() => SocketState"
+        }
+      ],
+      "staticMethods": [
+        {
+          "name": "create",
+          "signature": "(url: string, options: SocketOptions) => Socket"
+        }
+      ]
+    },
+    "Stream": {
+      "summary": "Utility class: Stream",
+      "methods": [
+        {
+          "name": "headers",
+          "signature": "(headers: Record<string, string>) => Stream"
+        },
+        {
+          "name": "withToken",
+          "signature": "(token: string) => Stream"
+        },
+        {
+          "name": "onChunk",
+          "signature": "(callback: ChunkCallback) => Stream"
+        },
+        {
+          "name": "onComplete",
+          "signature": "(callback: CompleteCallback) => Stream"
+        },
+        {
+          "name": "onError",
+          "signature": "(callback: ErrorCallback) => Stream"
+        },
+        {
+          "name": "get",
+          "signature": "() => Promise<string>"
+        },
+        {
+          "name": "post",
+          "signature": "(body?: unknown) => Promise<string>"
+        },
+        {
+          "name": "abort",
+          "signature": "() => Stream"
+        },
+        {
+          "name": "getBuffer",
+          "signature": "() => string"
+        },
+        {
+          "name": "getChunks",
+          "signature": "() => string[]"
+        },
+        {
+          "name": "isStreaming",
+          "signature": "() => boolean"
+        },
+        {
+          "name": "clear",
+          "signature": "() => Stream"
+        }
+      ],
+      "staticMethods": [
+        {
+          "name": "create",
+          "signature": "(url: string) => Stream"
+        }
+      ]
+    },
+    "StreamError": {
+      "summary": "Utility class: StreamError",
+      "methods": []
+    },
+    "Svg": {
+      "summary": "Utility class: Svg",
+      "methods": [
+        {
+          "name": "find",
+          "signature": "(selector: string) => Svg"
+        },
+        {
+          "name": "attr",
+          "signature": "(name: string, value: string | number) => Svg"
+        },
+        {
+          "name": "attrs",
+          "signature": "(attributes: Attributes) => Svg"
+        },
+        {
+          "name": "getAttr",
+          "signature": "(name: string) => string | null"
+        },
+        {
+          "name": "addClass",
+          "signature": "(className: string) => Svg"
+        },
+        {
+          "name": "removeClass",
+          "signature": "(className: string) => Svg"
+        },
+        {
+          "name": "text",
+          "signature": "(content: string) => Svg"
+        },
+        {
+          "name": "rect",
+          "signature": "(x: number, y: number, width: number, height: number, attrs?: Attributes | undefined) => Svg"
+        },
+        {
+          "name": "circle",
+          "signature": "(cx: number, cy: number, r: number, attrs?: Attributes | undefined) => Svg"
+        },
+        {
+          "name": "ellipse",
+          "signature": "(cx: number, cy: number, rx: number, ry: number, attrs?: Attributes | undefined) => Svg"
+        },
+        {
+          "name": "line",
+          "signature": "(x1: number, y1: number, x2: number, y2: number, attrs?: Attributes | undefined) => Svg"
+        },
+        {
+          "name": "polyline",
+          "signature": "(points: [number, number][], attrs?: Attributes | undefined) => Svg"
+        },
+        {
+          "name": "polygon",
+          "signature": "(points: [number, number][], attrs?: Attributes | undefined) => Svg"
+        },
+        {
+          "name": "path",
+          "signature": "(d: string, attrs?: Attributes | undefined) => Svg"
+        },
+        {
+          "name": "textElement",
+          "signature": "(x: number, y: number, content: string, attrs?: Attributes | undefined) => Svg"
+        },
+        {
+          "name": "group",
+          "signature": "(attrs?: Attributes | undefined) => Svg"
+        },
+        {
+          "name": "clear",
+          "signature": "() => Svg"
+        },
+        {
+          "name": "remove",
+          "signature": "() => void"
+        },
+        {
+          "name": "toString",
+          "signature": "() => string"
+        },
+        {
+          "name": "toElement",
+          "signature": "() => SVGElement | null"
+        },
+        {
+          "name": "getWidth",
+          "signature": "() => number"
+        },
+        {
+          "name": "getHeight",
+          "signature": "() => number"
+        }
+      ],
+      "staticMethods": [
+        {
+          "name": "create",
+          "signature": "(width: number, height: number) => Svg"
+        },
+        {
+          "name": "select",
+          "signature": "(selector: string) => Svg"
+        }
+      ]
+    },
+    "Graph": {
+      "summary": "Utility class: Graph",
+      "methods": [
+        {
+          "name": "size",
+          "signature": "(width: number, height: number) => Graph"
+        },
+        {
+          "name": "addNode",
+          "signature": "(id: string, options: NodeOptions) => Graph"
+        },
+        {
+          "name": "removeNode",
+          "signature": "(id: string) => Graph"
+        },
+        {
+          "name": "addEdge",
+          "signature": "(from: string, to: string, options: EdgeOptions) => Graph"
+        },
+        {
+          "name": "removeEdge",
+          "signature": "(from: string, to: string) => Graph"
+        },
+        {
+          "name": "getNode",
+          "signature": "(id: string) => Node | null"
+        },
+        {
+          "name": "getNodes",
+          "signature": "() => Node[]"
+        },
+        {
+          "name": "getEdges",
+          "signature": "() => Edge[]"
+        },
+        {
+          "name": "getEdgesWithPositions",
+          "signature": "() => (Edge & { sourceX: number; sourceY: number; targetX: number; targetY: number; })[]"
+        },
+        {
+          "name": "getNeighbors",
+          "signature": "(id: string) => Node[]"
+        },
+        {
+          "name": "layout",
+          "signature": "(type: LayoutType) => Graph"
+        }
+      ],
+      "staticMethods": [
+        {
+          "name": "create",
+          "signature": "() => Graph"
+        }
+      ]
+    },
+    "Scale": {
+      "summary": "Utility class: Scale",
+      "methods": [],
+      "staticMethods": [
+        {
+          "name": "linear",
+          "signature": "() => LinearScale"
+        },
+        {
+          "name": "log",
+          "signature": "(base: number) => LogScale"
+        },
+        {
+          "name": "time",
+          "signature": "() => TimeScale"
+        },
+        {
+          "name": "band",
+          "signature": "() => BandScale"
+        }
+      ]
+    },
+    "Axis": {
+      "summary": "Utility class: Axis",
+      "methods": [
+        {
+          "name": "orientation",
+          "signature": "(value: Orientation) => Axis"
+        },
+        {
+          "name": "ticks",
+          "signature": "(count: number) => Axis"
+        },
+        {
+          "name": "tickFormat",
+          "signature": "(formatter: (value: string | number | Date) => string) => Axis"
+        },
+        {
+          "name": "tickSize",
+          "signature": "(size: number) => Axis"
+        },
+        {
+          "name": "getTicks",
+          "signature": "() => Tick[]"
+        },
+        {
+          "name": "getOrientation",
+          "signature": "() => Orientation"
+        },
+        {
+          "name": "getTickSize",
+          "signature": "() => number"
+        },
+        {
+          "name": "getRange",
+          "signature": "() => [number, number]"
+        },
+        {
+          "name": "isHorizontal",
+          "signature": "() => boolean"
+        },
+        {
+          "name": "isVertical",
+          "signature": "() => boolean"
+        }
+      ],
+      "staticMethods": [
+        {
+          "name": "create",
+          "signature": "(scale: ScaleLike) => Axis"
+        }
+      ]
+    },
+    "Motion": {
+      "summary": "Utility class: Motion",
+      "methods": [],
+      "staticMethods": [
+        {
+          "name": "tween",
+          "signature": "(from: number, to: number, options: TweenOptions) => Tween"
+        },
+        {
+          "name": "spring",
+          "signature": "(from: number, to: number, options: SpringOptions) => Spring"
+        }
+      ]
+    },
+    "Canvas": {
+      "summary": "Utility class: Canvas",
+      "methods": [
+        {
+          "name": "size",
+          "signature": "(width: number, height: number) => Canvas"
+        },
+        {
+          "name": "getWidth",
+          "signature": "() => number"
+        },
+        {
+          "name": "getHeight",
+          "signature": "() => number"
+        },
+        {
+          "name": "style",
+          "signature": "(style: DrawStyle) => Canvas"
+        },
+        {
+          "name": "save",
+          "signature": "() => Canvas"
+        },
+        {
+          "name": "restore",
+          "signature": "() => Canvas"
+        },
+        {
+          "name": "clear",
+          "signature": "() => Canvas"
+        },
+        {
+          "name": "fill",
+          "signature": "(color: string) => Canvas"
+        },
+        {
+          "name": "rect",
+          "signature": "(x: number, y: number, width: number, height: number, style?: DrawStyle | undefined) => Canvas"
+        },
+        {
+          "name": "circle",
+          "signature": "(cx: number, cy: number, radius: number, style?: DrawStyle | undefined) => Canvas"
+        },
+        {
+          "name": "ellipse",
+          "signature": "(cx: number, cy: number, rx: number, ry: number, style?: DrawStyle | undefined) => Canvas"
+        },
+        {
+          "name": "line",
+          "signature": "(x1: number, y1: number, x2: number, y2: number, style?: DrawStyle | undefined) => Canvas"
+        },
+        {
+          "name": "polyline",
+          "signature": "(points: [number, number][], style?: DrawStyle | undefined) => Canvas"
+        },
+        {
+          "name": "polygon",
+          "signature": "(points: [number, number][], style?: DrawStyle | undefined) => Canvas"
+        },
+        {
+          "name": "arc",
+          "signature": "(cx: number, cy: number, radius: number, startAngle: number, endAngle: number, style?: DrawStyle | undefined) => Canvas"
+        },
+        {
+          "name": "path",
+          "signature": "(d: string, style?: DrawStyle | undefined) => Canvas"
+        },
+        {
+          "name": "text",
+          "signature": "(text: string, x: number, y: number, style?: TextStyle | undefined) => Canvas"
+        },
+        {
+          "name": "measureText",
+          "signature": "(text: string, font?: string | undefined) => TextMetrics"
+        },
+        {
+          "name": "drawImage",
+          "signature": "(source: string | HTMLImageElement, x: number, y: number, width?: number | undefined, height?: number | undefined) => Promise<Canvas>"
+        },
+        {
+          "name": "translate",
+          "signature": "(x: number, y: number) => Canvas"
+        },
+        {
+          "name": "rotate",
+          "signature": "(angle: number) => Canvas"
+        },
+        {
+          "name": "scale",
+          "signature": "(x: number, y: number) => Canvas"
+        },
+        {
+          "name": "resetTransform",
+          "signature": "() => Canvas"
+        },
+        {
+          "name": "getPixel",
+          "signature": "(x: number, y: number) => [number, number, number, number]"
+        },
+        {
+          "name": "setPixel",
+          "signature": "(x: number, y: number, r: number, g: number, b: number, a: number) => Canvas"
+        },
+        {
+          "name": "getImageData",
+          "signature": "(x?: number | undefined, y?: number | undefined, width?: number | undefined, height?: number | undefined) => ImageData"
+        },
+        {
+          "name": "putImageData",
+          "signature": "(imageData: ImageData, x: number, y: number) => Canvas"
+        },
+        {
+          "name": "toDataURL",
+          "signature": "(type: string, quality?: number | undefined) => string"
+        },
+        {
+          "name": "toBlob",
+          "signature": "(type: string, quality?: number | undefined) => Promise<Blob | null>"
+        },
+        {
+          "name": "getElement",
+          "signature": "() => HTMLCanvasElement"
+        },
+        {
+          "name": "getContext",
+          "signature": "() => CanvasRenderingContext2D"
+        },
+        {
+          "name": "appendTo",
+          "signature": "(parent: string | HTMLElement) => Canvas"
+        }
+      ],
+      "staticMethods": [
+        {
+          "name": "create",
+          "signature": "(width: number, height: number) => Canvas"
+        },
+        {
+          "name": "fromElement",
+          "signature": "(element: HTMLCanvasElement) => Canvas"
+        },
+        {
+          "name": "fromSelector",
+          "signature": "(selector: string) => Canvas"
+        }
+      ]
+    },
+    "CanvasError": {
+      "summary": "Utility class: CanvasError",
+      "methods": []
+    },
+    "Media": {
+      "summary": "Utility class: Media",
+      "methods": [],
+      "staticMethods": [
+        {
+          "name": "resize",
+          "signature": "(file: File, options: ImageResizeOptions) => Promise<Blob>"
+        },
+        {
+          "name": "toBase64",
+          "signature": "(file: File) => Promise<string>"
+        },
+        {
+          "name": "toArrayBuffer",
+          "signature": "(file: File) => Promise<ArrayBuffer>"
+        },
+        {
+          "name": "toText",
+          "signature": "(file: File) => Promise<string>"
+        }
+      ]
+    },
+    "MediaError": {
+      "summary": "Utility class: MediaError",
+      "methods": []
+    },
+    "DB": {
+      "summary": "Utility class: DB",
+      "methods": [
+        {
+          "name": "store",
+          "signature": "(schema: StoreSchema) => DB"
+        },
+        {
+          "name": "open",
+          "signature": "() => Promise<DB>"
+        },
+        {
+          "name": "close",
+          "signature": "() => DB"
+        },
+        {
+          "name": "put",
+          "signature": "(storeName: string, value: T, key?: IDBValidKey | undefined) => Promise<IDBValidKey>"
+        },
+        {
+          "name": "add",
+          "signature": "(storeName: string, value: T, key?: IDBValidKey | undefined) => Promise<IDBValidKey>"
+        },
+        {
+          "name": "get",
+          "signature": "(storeName: string, key: IDBValidKey) => Promise<T | undefined>"
+        },
+        {
+          "name": "getAll",
+          "signature": "(storeName: string, options: QueryOptions) => Promise<T[]>"
+        },
+        {
+          "name": "find",
+          "signature": "(storeName: string, indexName: string, value: IDBValidKey) => Promise<T[]>"
+        },
+        {
+          "name": "delete",
+          "signature": "(storeName: string, key: IDBValidKey) => Promise<void>"
+        },
+        {
+          "name": "clear",
+          "signature": "(storeName: string) => Promise<void>"
+        },
+        {
+          "name": "count",
+          "signature": "(storeName: string, key?: IDBValidKey | IDBKeyRange | undefined) => Promise<number>"
+        },
+        {
+          "name": "keys",
+          "signature": "(storeName: string) => Promise<IDBValidKey[]>"
+        },
+        {
+          "name": "update",
+          "signature": "(storeName: string, key: IDBValidKey, updates: Partial<T>) => Promise<T>"
+        },
+        {
+          "name": "batch",
+          "signature": "(storeName: string, operations: { type: \"put\" | \"add\" | \"delete\"; value?: T | undefined; key?: IDBValidKey | undefined; }[]) => Promise<void>"
+        }
+      ],
+      "staticMethods": [
+        {
+          "name": "create",
+          "signature": "(name: string, version: number) => DB"
+        },
+        {
+          "name": "deleteDatabase",
+          "signature": "(name: string) => Promise<void>"
+        },
+        {
+          "name": "databases",
+          "signature": "() => Promise<IDBDatabaseInfo[]>"
+        }
+      ]
+    },
+    "DBError": {
+      "summary": "Utility class: DBError",
+      "methods": []
+    },
+    "Worker": {
+      "summary": "Utility class: Worker",
+      "methods": [
+        {
+          "name": "run",
+          "signature": "(data: T) => Promise<R>"
+        },
+        {
+          "name": "post",
+          "signature": "(data: unknown) => Worker"
+        },
+        {
+          "name": "onMessage",
+          "signature": "(handler: MessageHandler<T, unknown>) => Worker"
+        },
+        {
+          "name": "onError",
+          "signature": "(handler: (error: Error) => void) => Worker"
+        },
+        {
+          "name": "terminate",
+          "signature": "() => Worker"
+        },
+        {
+          "name": "isRunning",
+          "signature": "() => boolean"
+        },
+        {
+          "name": "getPendingCount",
+          "signature": "() => number"
+        }
+      ],
+      "staticMethods": [
+        {
+          "name": "create",
+          "signature": "(scriptUrl: string) => Worker"
+        },
+        {
+          "name": "fromFunction",
+          "signature": "(fn: Function) => Worker"
+        },
+        {
+          "name": "fromCode",
+          "signature": "(code: string) => Worker"
+        }
+      ]
+    },
+    "WorkerPool": {
+      "summary": "Utility class: WorkerPool",
+      "methods": [
+        {
+          "name": "run",
+          "signature": "(data: T) => Promise<R>"
+        },
+        {
+          "name": "map",
+          "signature": "(items: T[]) => Promise<R[]>"
+        },
+        {
+          "name": "terminate",
+          "signature": "() => WorkerPool"
+        },
+        {
+          "name": "getSize",
+          "signature": "() => number"
+        },
+        {
+          "name": "getActiveCount",
+          "signature": "() => number"
+        },
+        {
+          "name": "getQueueLength",
+          "signature": "() => number"
+        }
+      ],
+      "staticMethods": [
+        {
+          "name": "create",
+          "signature": "(size: number, scriptUrl: string) => WorkerPool"
+        },
+        {
+          "name": "fromFunction",
+          "signature": "(size: number, fn: Function) => WorkerPool"
+        }
+      ]
+    },
+    "WorkerError": {
+      "summary": "Utility class: WorkerError",
+      "methods": []
+    },
+    "Embed": {
+      "summary": "Utility class: Embed",
+      "methods": [
+        {
+          "name": "store",
+          "signature": "(id: string, vector: number[], metadata?: Record<string, unknown> | undefined) => Embed"
+        },
+        {
+          "name": "storeMany",
+          "signature": "(items: { id: string; vector: number[]; metadata?: Record<string, unknown> | undefined; }[]) => Embed"
+        },
+        {
+          "name": "get",
+          "signature": "(id: string) => StoredVector | undefined"
+        },
+        {
+          "name": "remove",
+          "signature": "(id: string) => Embed"
+        },
+        {
+          "name": "clear",
+          "signature": "() => Embed"
+        },
+        {
+          "name": "count",
+          "signature": "() => number"
+        },
+        {
+          "name": "compare",
+          "signature": "(a: number[], b: number[]) => number"
+        },
+        {
+          "name": "nearest",
+          "signature": "(query: number[], topK: number) => SimilarityResult[]"
+        },
+        {
+          "name": "search",
+          "signature": "(query: number[], threshold: number) => SimilarityResult[]"
+        },
+        {
+          "name": "toJSON",
+          "signature": "() => string"
+        }
+      ],
+      "staticMethods": [
+        {
+          "name": "create",
+          "signature": "(options: EmbedOptions) => Embed"
+        },
+        {
+          "name": "cosineSimilarity",
+          "signature": "(a: number[], b: number[]) => number"
+        },
+        {
+          "name": "euclideanDistance",
+          "signature": "(a: number[], b: number[]) => number"
+        },
+        {
+          "name": "dotProduct",
+          "signature": "(a: number[], b: number[]) => number"
+        },
+        {
+          "name": "normalize",
+          "signature": "(vector: number[]) => number[]"
+        },
+        {
+          "name": "average",
+          "signature": "(vectors: number[][]) => number[]"
+        },
+        {
+          "name": "fromJSON",
+          "signature": "(json: string) => Embed"
+        }
+      ]
+    },
+    "EmbedError": {
+      "summary": "Utility class: EmbedError",
+      "methods": []
+    },
+    "Diff": {
+      "summary": "Utility class: Diff",
+      "methods": [],
+      "staticMethods": [
+        {
+          "name": "chars",
+          "signature": "(oldStr: string, newStr: string, options: DiffOptions) => Change[]"
+        },
+        {
+          "name": "words",
+          "signature": "(oldStr: string, newStr: string, options: DiffOptions) => Change[]"
+        },
+        {
+          "name": "lines",
+          "signature": "(oldStr: string, newStr: string, options: DiffOptions) => Change[]"
+        },
+        {
+          "name": "apply",
+          "signature": "(original: string, changes: Change[]) => string"
+        },
+        {
+          "name": "createPatch",
+          "signature": "(filename: string, oldStr: string, newStr: string, context: number) => string"
+        },
+        {
+          "name": "distance",
+          "signature": "(a: string, b: string) => number"
+        },
+        {
+          "name": "similarity",
+          "signature": "(a: string, b: string) => number"
+        },
+        {
+          "name": "commonPrefix",
+          "signature": "(a: string, b: string) => string"
+        },
+        {
+          "name": "commonSuffix",
+          "signature": "(a: string, b: string) => string"
+        }
+      ]
+    },
+    "AuthError": {
+      "summary": "Utility class: AuthError",
+      "methods": []
+    }
+  },
+  "rules": [
+    {
+      "name": "required",
+      "signature": "(message?: string | undefined) => Rule<T>",
+      "description": "Field must have a non-empty value"
+    },
+    {
+      "name": "email",
+      "signature": "(message?: string | undefined) => Rule<T>",
+      "description": "Field must be a valid email address"
+    },
+    {
+      "name": "url",
+      "signature": "(message?: string | undefined) => Rule<T>",
+      "description": "Field must be a valid URL"
+    },
+    {
+      "name": "min",
+      "signature": "(n: number, message?: string | undefined) => Rule<T>",
+      "description": "Minimum length (strings) or value (numbers)"
+    },
+    {
+      "name": "max",
+      "signature": "(n: number, message?: string | undefined) => Rule<T>",
+      "description": "Maximum length (strings) or value (numbers)"
+    },
+    {
+      "name": "between",
+      "signature": "(min: number, max: number, message?: string | undefined) => Rule<T>",
+      "description": "Value must be between min and max (inclusive)"
+    },
+    {
+      "name": "pattern",
+      "signature": "(regex: RegExp, message?: string | undefined) => Rule<T>",
+      "description": "Field must match regex pattern"
+    },
+    {
+      "name": "in",
+      "signature": "(values: unknown[], message?: string | undefined) => Rule<T>",
+      "description": "Field must be one of the allowed values"
+    },
+    {
+      "name": "notIn",
+      "signature": "(values: unknown[], message?: string | undefined) => Rule<T>",
+      "description": "Field must not be one of the disallowed values"
+    },
+    {
+      "name": "same",
+      "signature": "(otherPath: string, message?: string | undefined) => Rule<T>",
+      "description": "Field must match another field's value"
+    },
+    {
+      "name": "different",
+      "signature": "(otherPath: string, message?: string | undefined) => Rule<T>",
+      "description": "Field must be different from another field's value"
+    },
+    {
+      "name": "integer",
+      "signature": "(message?: string | undefined) => Rule<T>",
+      "description": "Field must be an integer"
+    },
+    {
+      "name": "numeric",
+      "signature": "(message?: string | undefined) => Rule<T>",
+      "description": "Field must be numeric"
+    },
+    {
+      "name": "boolean",
+      "signature": "(message?: string | undefined) => Rule<T>",
+      "description": "Field must be a boolean"
+    },
+    {
+      "name": "date",
+      "signature": "(message?: string | undefined) => Rule<T>",
+      "description": "Field must be a valid date"
+    },
+    {
+      "name": "custom",
+      "signature": "(fn: (value: unknown, data: T) => boolean, message?: string | undefined) => Rule<T>",
+      "description": "Custom validation function"
+    }
+  ]
+}
