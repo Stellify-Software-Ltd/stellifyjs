@@ -67,6 +67,7 @@ Vue-reactive modules. Use inside `<script setup>` or `setup()`.
 | Data fetching | usePagination, useInfiniteScroll, useLiveData, useLazyLoad |
 | State | useQueryState |
 | Auth & Chat | useAuth, useChat |
+| Collaboration | usePresence |
 | Routing | useRouter |
 
 ## File Uploads
@@ -254,6 +255,67 @@ const router = useRouter()
 router.register('/users/:id', (params) => loadUser(params.id))
 router.navigate('/users/123')
 // Reactive: router.currentPath, router.params
+```
+
+### usePresence
+
+Real-time collaborative presence: who's here, where their cursor is, what they're focused on.
+
+```javascript
+import { usePresence } from 'stellify-framework'
+
+const { users, cursor, focus } = usePresence({
+  channel: 'customers',
+  user: { id: currentUser.id, name: currentUser.name },
+})
+```
+
+Wire `cursor` to a `@mousemove` handler. Wire `focus(key)` to row hover or field focus. Other connected users appear in `users` with their cursor positions, focus state, and metadata.
+
+```vue
+<template>
+  <div @mousemove="cursor" class="relative">
+    <div v-for="row in rows" :key="row.id"
+         @mouseenter="focus(row.id)"
+         @mouseleave="focus(null)">
+      {{ row.name }}
+      <span v-if="users.find(u => u.focus === row.id)">
+        {{ users.find(u => u.focus === row.id).name }} viewing
+      </span>
+    </div>
+    <UserCursor v-for="user in users" :key="user.id" :user="user" />
+  </div>
+</template>
+```
+
+Pairs with Laravel Reverb / Pusher on the backend. Channel name should match a presence channel defined in `routes/channels.php`.
+
+**Options:**
+- `channel` (required) - Laravel broadcast channel name
+- `user` (required) - `{ id, ...metadata }` current user's identity
+- `autoJoin` - Join on mount (default: true)
+- `throttleMs` - Cursor broadcast throttle (default: 50ms)
+
+**Returns:**
+- `users` - `ComputedRef<PresenceUser[]>` other users present (excludes self)
+- `self` - `Ref<PresenceUser | null>` current user's presence record
+- `cursor` - `(event: MouseEvent) => void` call from @mousemove
+- `focus` - `(key: string | null) => void` broadcast focus state
+- `setMeta` - `(meta: Record<string, unknown>) => void` broadcast arbitrary metadata
+- `isConnected` - `Ref<boolean>` WebSocket connection state
+- `error` - `Ref<Error | null>` connection errors
+- `join` / `leave` - Manual channel control
+
+**PresenceUser shape:**
+```typescript
+{
+  id: string | number
+  joinedAt: number
+  cursor: { x: number; y: number } | null
+  focus: string | null
+  meta: Record<string, unknown>
+  // ...additional fields from user config
+}
 ```
 
 ## Design Principles

@@ -40,6 +40,8 @@ export { useAuth, AuthError } from './composables/useAuth';
 export { useChat, useChatFromHistory } from './composables/useChat';
 // Router
 export { useRouter } from './composables/useRouter';
+// Presence
+export { usePresence } from './composables/usePresence';
 // =============================================================================
 // Deprecated aliases - will be removed in next major version
 // =============================================================================

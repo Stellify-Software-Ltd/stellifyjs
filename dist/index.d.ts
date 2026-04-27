@@ -34,6 +34,8 @@ export { useChat, useChatFromHistory } from './composables/useChat';
 export type { ChatOptions, ChatReturn } from './composables/useChat';
 export { useRouter } from './composables/useRouter';
 export type { RouterReturn } from './composables/useRouter';
+export { usePresence } from './composables/usePresence';
+export type { PresenceOptions, PresenceReturn, PresenceUser } from './composables/usePresence';
 /**
  * @deprecated Use `useAuth` instead. Will be removed in the next major version.
  */

@@ -71,6 +71,10 @@ export type { ChatOptions, ChatReturn } from './composables/useChat'
 export { useRouter } from './composables/useRouter'
 export type { RouterReturn } from './composables/useRouter'
 
+// Presence
+export { usePresence } from './composables/usePresence'
+export type { PresenceOptions, PresenceReturn, PresenceUser } from './composables/usePresence'
+
 // =============================================================================
 // Deprecated aliases - will be removed in next major version
 // =============================================================================
